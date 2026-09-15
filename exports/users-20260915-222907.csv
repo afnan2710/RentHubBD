@@ -1,0 +1,3 @@
+id,firstName,lastName,email,countryCode,phoneNumber,userType,status
+1,Afnan,Shahriar,afnan.shahriar27@gmail.com,+880,1601701444,OWNER,ACTIVE
+2,Afnan,Shahriar,shahriar.afnan07@gmail.com,+880,1601701444,RENTER,ACTIVE

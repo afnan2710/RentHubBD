@@ -1,0 +1,4 @@
+id,title,category,propertyType,city,area,monthlyRent,totalCost,status,ownerId
+3,Spacious 4-Bedroom House in Uttara,RESIDENTIAL,HOUSE,Dhaka,Uttara,75000.0,90000.0,PENDING,1
+2,Modern Office Space in Banani Commercial Area,COMMERCIAL,OFFICE,Dhaka,Banani,80000.0,103000.0,PENDING,1
+1,Spacious 3-Bedroom Apartment in Dhanmondi,RESIDENTIAL,APARTMENT,Dhaka,Dhanmondi,42000.0,56000.0,PENDING,1
