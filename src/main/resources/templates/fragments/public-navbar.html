@@ -1,0 +1,44 @@
+<div th:fragment="navbar" class="public-navbar">
+    <div class="public-navbar-inner">
+        <a th:href="@{/home}" class="public-brand">
+            <span class="public-brand-mark">R</span>
+            <span class="public-brand-text">RentHub BD</span>
+        </a>
+
+        <nav class="public-nav-links">
+            <a th:href="@{/home#categories}" class="public-nav-link">Explore Spaces</a>
+            <a th:href="@{/about-us}" class="public-nav-link">Our Story</a>
+            <a th:href="@{/home#contact}" class="public-nav-link">Get in Touch</a>
+        </nav>
+
+        <div class="public-nav-right">
+            <a th:if="${!navLoggedIn}" th:href="@{/login}" class="public-login-btn">Login</a>
+
+            <div th:if="${navLoggedIn}" class="profile-menu">
+                <button type="button" class="profile-trigger" aria-haspopup="true">
+                    <img th:if="${navProfilePhoto != null}"
+                         th:src="@{'/uploads/profile-photos/' + ${navProfilePhoto}}"
+                         alt="Profile" class="profile-trigger-img">
+                    <span th:if="${navProfilePhoto == null}"
+                          class="profile-trigger-initials"
+                          th:text="${navInitials}">U</span>
+                </button>
+
+                <div class="profile-dropdown">
+                    <div class="profile-dropdown-header">
+                        <span class="profile-dropdown-name" th:text="${navDisplayName}">User</span>
+                        <span class="profile-dropdown-role" th:text="${navRole}">RENTER</span>
+                    </div>
+                    <a th:href="@{${navDashboardUrl}}" class="profile-dropdown-item">
+                        <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
+                        Dashboard
+                    </a>
+                    <a th:href="@{${navLogoutUrl}}" class="profile-dropdown-item profile-dropdown-logout">
+                        <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+                        Log Out
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+<div th:fragment="sidebar(active, role)" class="sidebar">
+    <div class="sidebar-brand">
+        <p class="eyebrow">RentHub BD</p>
+        <p class="brand-role">Admin Panel</p>
+    </div>
+    <nav class="sidebar-nav">
+        <a th:href="@{/admin/dashboard}" th:classappend="${active == 'dashboard'} ? 'active' : ''" class="nav-item">
+            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
+            Dashboard
+        </a>
+        <a th:href="@{/admin/users}" th:classappend="${active == 'users'} ? 'active' : ''" class="nav-item">
+            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5"/><circle cx="17" cy="9" r="2.5"/><path d="M14.5 15c3 0 6 1.7 6 5"/></svg>
+            Users
+        </a>
+        <a th:href="@{/admin/listings}" th:classappend="${active == 'listings'} ? 'active' : ''" class="nav-item">
+            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 4v5"/></svg>
+            Moderation
+        </a>
+        <a th:href="@{/admin/listings/all}" th:classappend="${active == 'listings-all'} ? 'active' : ''" class="nav-item">
+            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h10"/></svg>
+            All Listings
+        </a>
+        <a th:if="${role == 'SUPERADMIN'}" th:href="@{/admin/admins}" th:classappend="${active == 'admins'} ? 'active' : ''" class="nav-item">
+            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg>
+            Admin Accounts
+        </a>
+        <a th:if="${role == 'SUPERADMIN'}" th:href="@{/admin/admins/register}" th:classappend="${active == 'register-admin'} ? 'active' : ''" class="nav-item">
+            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+            Register Admin
+        </a>
+        <a th:href="@{/admin/notifications}" th:classappend="${active == 'notifications'} ? 'active' : ''" class="nav-item nav-item-badge">
+            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+            Notifications
+            <span class="nav-badge"
+                  th:if="${adminUnreadCount != null and adminUnreadCount > 0}"
+                  th:text="${adminUnreadCount}">0</span>
+        </a>
+        <a th:href="@{/admin/audit-log}" th:classappend="${active == 'audit'} ? 'active' : ''" class="nav-item">
+            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h11l4 4v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M8 8h6"/><path d="M8 12h8"/><path d="M8 16h5"/></svg>
+            Activity Log
+        </a>
+        <a th:href="@{/admin/profile}" th:classappend="${active == 'profile'} ? 'active' : ''" class="nav-item">
+            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+            My Profile
+        </a>
+    </nav>
+    <div class="sidebar-footer">
+        <a th:href="@{/admin/logout}" class="nav-item logout-item">
+            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+            Log Out
+        </a>
+    </div>
+</div>

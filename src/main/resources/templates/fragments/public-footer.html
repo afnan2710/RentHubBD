@@ -1,0 +1,47 @@
+<div th:fragment="footer" class="public-footer">
+    <div class="public-footer-inner">
+        <div class="public-footer-brand">
+            <div class="public-brand">
+                <span class="public-brand-mark">R</span>
+                <span class="public-brand-text">RentHub BD</span>
+            </div>
+            <p class="public-footer-tagline">
+                Bangladesh's unified rental marketplace. Verified listings for homes, offices, shops,
+                warehouses and every rentable space in between.
+            </p>
+            <div class="public-footer-socials">
+                <a href="#" aria-label="Facebook">f</a>
+                <a href="#" aria-label="LinkedIn">in</a>
+                <a href="#" aria-label="Twitter">x</a>
+            </div>
+        </div>
+
+        <div class="public-footer-col">
+            <h4>Explore</h4>
+            <a th:href="@{/home#categories}">Residential</a>
+            <a th:href="@{/home#categories}">Commercial</a>
+            <a th:href="@{/home#categories}">Industrial &amp; Storage</a>
+            <a th:href="@{/home#categories}">Other Spaces</a>
+        </div>
+
+        <div class="public-footer-col">
+            <h4>Company</h4>
+            <a th:href="@{/about-us}">About Us</a>
+            <a th:href="@{/home#contact}">Contact</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Privacy Policy</a>
+        </div>
+
+        <div class="public-footer-col">
+            <h4>Account</h4>
+            <a th:href="@{/login}">Login</a>
+            <a th:href="@{/register}">Create Account</a>
+            <a th:href="@{/forgetpassword}">Reset Password</a>
+        </div>
+    </div>
+
+    <div class="public-footer-bottom">
+        <p>&copy; 2026 RentHub BD. All rights reserved.</p>
+        <p>Built in Dhaka, Bangladesh.</p>
+    </div>
+</div>

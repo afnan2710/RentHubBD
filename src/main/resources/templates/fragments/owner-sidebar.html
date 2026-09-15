@@ -1,0 +1,49 @@
+<div th:fragment="sidebar(active)" class="sidebar">
+    <div class="sidebar-brand">
+        <p class="eyebrow">RentHub BD</p>
+        <p class="brand-role">Owner Panel</p>
+    </div>
+    <nav class="sidebar-nav">
+        <a th:href="@{/owner/dashboard}" th:classappend="${active == 'dashboard'} ? 'active' : ''" class="nav-item">
+            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
+            Dashboard
+        </a>
+        <a th:href="@{/owner/listings}" th:classappend="${active == 'listings'} ? 'active' : ''" class="nav-item">
+            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 4v5"/></svg>
+            My Listings
+        </a>
+        <a th:href="@{/owner/listings/new}" th:classappend="${active == 'new-listing'} ? 'active' : ''" class="nav-item">
+            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+            Add New Listing
+        </a>
+        <a th:href="@{/owner/visit-requests}" th:classappend="${active == 'visits'} ? 'active' : ''" class="nav-item">
+            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M3 10h18"/><path d="M9 15l2 2 4-4"/></svg>
+            Visit Requests
+        </a>
+        <a th:href="@{/owner/messages}" th:classappend="${active == 'messages'} ? 'active' : ''" class="nav-item">
+            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-4-1L3 20l1-4.5A8.5 8.5 0 1 1 21 11.5z"/></svg>
+            Messages
+        </a>
+        <a th:href="@{/owner/notifications}" th:classappend="${active == 'notifications'} ? 'active' : ''" class="nav-item nav-item-badge">
+            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+            Notifications
+            <span class="nav-badge"
+                  th:if="${userUnreadCount != null and userUnreadCount > 0}"
+                  th:text="${userUnreadCount}">0</span>
+        </a>
+        <a th:href="@{/owner/reviews}" th:classappend="${active == 'reviews'} ? 'active' : ''" class="nav-item">
+            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9 12 2"/></svg>
+            Reviews
+        </a>
+        <a th:href="@{/owner/profile}" th:classappend="${active == 'profile'} ? 'active' : ''" class="nav-item">
+            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+            My Profile
+        </a>
+    </nav>
+    <div class="sidebar-footer">
+        <a th:href="@{/logout}" class="nav-item logout-item">
+            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+            Log Out
+        </a>
+    </div>
+</div>

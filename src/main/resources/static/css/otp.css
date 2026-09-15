@@ -1,0 +1,73 @@
+.otp-input {
+    width: 100%;
+    padding: 14px;
+    font-size: 22px;
+    letter-spacing: 12px;
+    text-align: center;
+    color: var(--navy-text);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.otp-input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.15);
+}
+
+.captcha-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: #F7F5EC;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.captcha-question {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--navy-text);
+    white-space: nowrap;
+}
+
+.captcha-answer {
+    width: 90px;
+    padding: 10px;
+    font-size: 16px;
+    text-align: center;
+    color: var(--navy-text);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    outline: none;
+}
+
+.captcha-answer:focus {
+    border-color: var(--gold);
+}
+
+.masked-email {
+    font-weight: 600;
+    color: var(--navy-text);
+}
+
+.helper-links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+    font-size: 13px;
+}
+
+.helper-links a {
+    color: var(--gold);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.helper-links a:hover {
+    text-decoration: underline;
+}

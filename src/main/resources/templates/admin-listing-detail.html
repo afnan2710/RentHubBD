@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${property.title} + ' - Review'">Review Listing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/listing.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div class="dashboard-layout">
+    <div th:replace="~{fragments/admin-sidebar :: sidebar('listings', ${adminRole})}"></div>
+    <main class="dashboard-main">
+
+        <div class="dashboard-topbar page-head">
+            <div>
+                <p class="eyebrow">Listing #<span th:text="${property.id}">0</span></p>
+                <h1 th:text="${property.title}">Title</h1>
+                <p class="subtitle">
+                    <span class="status"
+                          th:classappend="'status-' + ${#strings.toLowerCase(property.status.name())}"
+                          th:text="${property.status.label}">Status</span>
+                    &middot;
+                    Submitted <span th:text="${#temporals.format(property.createdAt, 'dd MMM yyyy, hh:mm a')}">date</span>
+                </p>
+            </div>
+            <div class="action-row">
+                <a th:href="@{/admin/listings}" class="btn-ghost">Back to Pending</a>
+                <a th:href="@{/admin/listings/all}" class="btn-ghost">All Listings</a>
+            </div>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}"   class="alert alert-error"   th:text="${error}"></div>
+
+        <div th:if="${property.status.name() == 'REJECTED' and property.rejectionReason != null}"
+             class="alert alert-error">
+            <strong>Rejection reason:</strong> <span th:text="${property.rejectionReason}">reason</span>
+        </div>
+
+        <div class="detail-photo-grid" th:if="${property.photos != null and !property.photos.isEmpty()}">
+            <div class="detail-photo" th:each="path : ${property.photos}">
+                <img th:src="@{'/uploads/' + ${path}}" alt="Listing photo">
+            </div>
+        </div>
+        <div class="panel" th:if="${property.photos == null or property.photos.isEmpty()}">
+            <p class="hint">No photos were uploaded for this listing.</p>
+        </div>
+
+        <div class="detail-grid">
+
+            <section class="panel">
+                <h2 class="detail-heading">Overview</h2>
+                <div class="detail-row"><span>Category</span><span th:text="${property.category.label}">Residential</span></div>
+                <div class="detail-row"><span>Property type</span><span th:text="${property.propertyType.label}">Apartment</span></div>
+                <div class="detail-row"><span>Size</span><span th:text="${property.sizeSqft != null ? property.sizeSqft + ' sqft' : '—'}">—</span></div>
+                <div class="detail-row"><span>Bedrooms</span><span th:text="${property.bedrooms != null ? property.bedrooms : '—'}">—</span></div>
+                <div class="detail-row"><span>Bathrooms</span><span th:text="${property.bathrooms != null ? property.bathrooms : '—'}">—</span></div>
+                <div class="detail-row"><span>Floor</span>
+                    <span th:text="${property.floorNumber != null ? property.floorNumber + ' of ' + (property.totalFloors != null ? property.totalFloors : '?') : '—'}">—</span>
+                </div>
+                <div class="detail-row"><span>Available from</span>
+                    <span th:text="${property.availableFrom != null ? #temporals.format(property.availableFrom, 'dd MMM yyyy') : '—'}">—</span>
+                </div>
+                <div class="detail-row"><span>Advance</span>
+                    <span th:text="${property.advanceMonths != null ? property.advanceMonths + ' months' : '—'}">—</span>
+                </div>
+            </section>
+
+            <section class="panel">
+                <h2 class="detail-heading">Location</h2>
+                <div class="detail-row"><span>Address</span><span th:text="${property.address}">addr</span></div>
+                <div class="detail-row"><span>Area / Thana</span><span th:text="${property.area}">area</span></div>
+                <div class="detail-row"><span>City</span><span th:text="${property.city}">city</span></div>
+                <div class="detail-row"><span>Postal code</span><span th:text="${property.postalCode != null ? property.postalCode : '—'}">—</span></div>
+            </section>
+
+            <section class="panel">
+                <h2 class="detail-heading">Pricing</h2>
+                <div class="detail-row"><span>Monthly rent</span>
+                    <span th:text="'৳ ' + ${#numbers.formatDecimal(property.monthlyRent, 1, 'COMMA', 0, 'POINT')}">৳ 0</span>
+                </div>
+                <div class="detail-row"><span>Service charge</span>
+                    <span th:text="${property.serviceCharge != null ? '৳ ' + #numbers.formatDecimal(property.serviceCharge, 1, 'COMMA', 0, 'POINT') : '—'}">—</span>
+                </div>
+                <div class="detail-row"><span>Parking fee</span>
+                    <span th:text="${property.parkingFee != null ? '৳ ' + #numbers.formatDecimal(property.parkingFee, 1, 'COMMA', 0, 'POINT') : '—'}">—</span>
+                </div>
+                <div class="detail-row"><span>Estimated utilities</span>
+                    <span th:text="${property.utilityEstimate != null ? '৳ ' + #numbers.formatDecimal(property.utilityEstimate, 1, 'COMMA', 0, 'POINT') : '—'}">—</span>
+                </div>
+                <div class="detail-row detail-total"><span>Total monthly cost</span>
+                    <span th:text="'৳ ' + ${#numbers.formatDecimal(property.totalMonthlyCost, 1, 'COMMA', 0, 'POINT')}">৳ 0</span>
+                </div>
+            </section>
+
+            <section class="panel">
+                <h2 class="detail-heading">Owner</h2>
+                <div class="detail-row"><span>Name</span>
+                    <span th:text="${property.owner != null ? property.owner.firstName + ' ' + property.owner.lastName : '—'}">—</span>
+                </div>
+                <div class="detail-row"><span>Email</span>
+                    <span th:text="${property.owner != null ? property.owner.email : '—'}">—</span>
+                </div>
+                <div class="detail-row"><span>Phone</span>
+                    <span th:text="${property.owner != null ? property.owner.countryCode + ' ' + property.owner.phoneNumber : '—'}">—</span>
+                </div>
+                <div class="detail-row"><span>Address</span>
+                    <span th:text="${property.owner != null ? property.owner.address : '—'}">—</span>
+                </div>
+                <div class="detail-row"><span>Account status</span>
+                    <span th:text="${property.owner != null and property.owner.status != null ? property.owner.status.label : '—'}">—</span>
+                </div>
+            </section>
+        </div>
+
+        <section class="panel">
+            <h2 class="detail-heading">Description</h2>
+            <p class="detail-paragraph"
+               th:text="${property.description != null and !property.description.isBlank() ? property.description : 'No description was provided by the owner.'}">
+                Description
+            </p>
+        </section>
+
+        <section class="panel">
+            <h2 class="detail-heading">Facilities</h2>
+            <div th:if="${property.facilities == null or property.facilities.isEmpty()}" class="hint">No facilities listed.</div>
+            <div class="facility-chip-row" th:if="${property.facilities != null and !property.facilities.isEmpty()}">
+                <span class="chip facility-chip" th:each="f : ${property.facilities}" th:text="${f}">Facility</span>
+            </div>
+        </section>
+
+        <section class="panel decision-panel" th:if="${property.status.name() == 'PENDING'}">
+            <h2 class="detail-heading">Moderation decision</h2>
+            <p class="subtitle">Review everything above. Approve to publish, or reject with a clear reason the owner can act on.</p>
+
+            <div class="decision-row">
+                <form th:action="@{/admin/listings/{id}/approve(id=${property.id})}" method="post">
+                    <button type="submit" class="submit-btn inline btn-approve"
+                            onclick="return confirm('Publish this listing?');">Approve &amp; Publish</button>
+                </form>
+
+                <form th:action="@{/admin/listings/{id}/reject(id=${property.id})}" method="post" class="reject-inline">
+                    <input type="text" name="reason" placeholder="Reason for rejection" required>
+                    <button type="submit" class="submit-btn inline btn-reject"
+                            onclick="return confirm('Reject this listing?');">Reject</button>
+                </form>
+            </div>
+        </section>
+
+        <section class="panel" th:if="${property.status.name() == 'PUBLISHED'}">
+            <h2 class="detail-heading">Management</h2>
+            <p class="subtitle">
+                This listing is live and visible to renters. Archiving it will hide it from the public site
+                without deleting it — you can restore it at any time.
+            </p>
+            <div class="decision-row">
+                <form th:action="@{/admin/listings/{id}/archive(id=${property.id})}" method="post">
+                    <input type="hidden" name="from" value="detail">
+                    <button type="submit" class="submit-btn inline btn-archive"
+                            onclick="return confirm('Archive this listing? It will be hidden from the public site.');">
+                        Archive Listing
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <section class="panel" th:if="${property.status.name() == 'ARCHIVED'}">
+            <h2 class="detail-heading">Management</h2>
+            <p class="subtitle">
+                This listing is archived and not publicly visible. Restoring it will publish it again immediately.
+            </p>
+            <div class="decision-row">
+                <form th:action="@{/admin/listings/{id}/unarchive(id=${property.id})}" method="post">
+                    <input type="hidden" name="from" value="detail">
+                    <button type="submit" class="submit-btn inline btn-approve"
+                            onclick="return confirm('Restore this listing to published?');">
+                        Unarchive &amp; Republish
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <section class="panel" th:if="${property.status.name() == 'REJECTED'}">
+            <h2 class="detail-heading">Moderation complete</h2>
+            <p class="subtitle">
+                This listing was rejected. The owner has been notified and can edit it to resubmit.
+            </p>
+        </section>
+
+    </main>
+</div>
+</body>
+</html>

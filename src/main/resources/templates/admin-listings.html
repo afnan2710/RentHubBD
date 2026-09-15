@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listing Moderation - RentHubBD Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/listing.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div class="dashboard-layout">
+    <div th:replace="~{fragments/admin-sidebar :: sidebar(${mode == 'all'} ? 'listings-all' : 'listings', ${adminRole})}"></div>
+    <main class="dashboard-main">
+
+        <div class="dashboard-topbar page-head">
+            <div>
+                <h1 th:text="${mode == 'all'} ? 'All listings' : 'Pending moderation'">Moderation</h1>
+                <p class="subtitle"
+                   th:text="${mode == 'all'} ? 'Every listing on the platform, newest first.' : 'Listings waiting for approval or rejection.'">
+                    Subtitle
+                </p>
+            </div>
+            <a th:if="${mode != 'all'}" th:href="@{/admin/listings/all}" class="btn-primary">View all</a>
+            <a th:if="${mode == 'all'}" th:href="@{/admin/listings}" class="btn-primary">View pending</a>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}"   class="alert alert-error"   th:text="${error}"></div>
+
+        <div class="panel filter-bar">
+            <form method="get"
+                  th:action="${mode == 'all'} ? @{/admin/listings/all} : @{/admin/listings}"
+                  class="filter-form filter-form-4">
+                <div class="filter-field" th:if="${mode == 'all'}">
+                    <label for="status">Status</label>
+                    <select id="status" name="status">
+                        <option value="">All statuses</option>
+                        <option th:each="s : ${statuses}"
+                                th:value="${s}"
+                                th:text="${s.label}"
+                                th:selected="${filterStatus != null and filterStatus == s.name()}"></option>
+                    </select>
+                </div>
+
+                <div class="filter-field">
+                    <label for="category">Category</label>
+                    <select id="category" name="category">
+                        <option value="">All categories</option>
+                        <option th:each="c : ${categories}"
+                                th:value="${c}"
+                                th:text="${c.label}"
+                                th:selected="${filterCategory != null and filterCategory == c.name()}"></option>
+                    </select>
+                </div>
+
+                <div class="filter-field">
+                    <label for="city">City</label>
+                    <input type="text" id="city" name="city" placeholder="e.g. Dhaka"
+                           th:value="${filterCity}">
+                </div>
+
+                <div class="filter-field">
+                    <label for="keyword">Title keyword</label>
+                    <input type="text" id="keyword" name="keyword" placeholder="Search title"
+                           th:value="${filterKeyword}">
+                </div>
+
+                <div class="filter-actions">
+                    <button type="submit" class="submit-btn inline">Apply</button>
+                    <a th:href="${mode == 'all'} ? @{/admin/listings/all} : @{/admin/listings}"
+                       class="btn-ghost">Clear</a>
+                </div>
+            </form>
+        </div>
+
+        <div th:if="${listings.isEmpty()}" class="panel">
+            <span class="coming-soon-badge">Nothing to show</span>
+            <h2>No listings match your filters</h2>
+            <p th:text="${mode == 'all'} ? 'Try relaxing the filters above.' : 'No pending listings match your filters.'">Info</p>
+        </div>
+
+        <div th:if="${!listings.isEmpty()}" class="listing-table-wrap">
+            <table class="listing-table">
+                <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Owner</th>
+                    <th>Category</th>
+                    <th>Location</th>
+                    <th>Rent</th>
+                    <th>Status</th>
+                    <th class="action-col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p : ${listings}">
+                    <td>
+                        <div class="cell-title" th:text="${p.title}">Title</div>
+                        <div class="cell-sub" th:text="${p.propertyType != null ? p.propertyType.label : ''}">Type</div>
+                    </td>
+                    <td>
+                        <div th:text="${p.owner != null ? p.owner.firstName + ' ' + p.owner.lastName : 'Unknown'}">Owner</div>
+                        <div class="cell-sub" th:text="${p.owner != null ? p.owner.email : ''}">Email</div>
+                    </td>
+                    <td><span class="chip" th:text="${p.category != null ? p.category.label : '—'}">Category</span></td>
+                    <td th:text="${p.area + ', ' + p.city}">Location</td>
+                    <td class="cell-amount"
+                        th:text="'৳ ' + ${#numbers.formatDecimal(p.totalMonthlyCost, 1, 'COMMA', 0, 'POINT')}">৳ 0</td>
+                    <td>
+                        <span class="status"
+                              th:classappend="'status-' + ${#strings.toLowerCase(p.status.name())}"
+                              th:text="${p.status.label}">Status</span>
+                    </td>
+                    <td class="action-col">
+                        <a th:href="@{/admin/listings/{id}(id=${p.id})}" class="btn-small btn-primary-small">View &amp; Review</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

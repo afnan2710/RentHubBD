@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users - RentHubBD Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/listing.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div class="dashboard-layout">
+    <div th:replace="~{fragments/admin-sidebar :: sidebar('users', ${adminRole})}"></div>
+    <main class="dashboard-main">
+
+        <div class="dashboard-topbar page-head">
+            <div>
+                <h1>User management</h1>
+                <p class="subtitle">Activate or deactivate any renter or owner account.</p>
+            </div>
+            <a th:href="@{/admin/profile/export/users}" class="btn-primary">Export CSV</a>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}"   class="alert alert-error"   th:text="${error}"></div>
+
+        <div class="stat-grid">
+            <div class="stat-card">
+                <p class="stat-label">Matching</p>
+                <p class="stat-value" th:text="${users.size()}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Active</p>
+                <p class="stat-value" th:text="${byStatus.get('ACTIVE') ?: 0}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Inactive</p>
+                <p class="stat-value" th:text="${byStatus.get('INACTIVE') ?: 0}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Unknown</p>
+                <p class="stat-value" th:text="${byStatus.get('UNKNOWN') ?: 0}">0</p>
+            </div>
+        </div>
+
+        <div class="panel filter-bar">
+            <form method="get" th:action="@{/admin/users}" class="filter-form filter-form-3">
+                <div class="filter-field">
+                    <label for="role">Role</label>
+                    <select id="role" name="role">
+                        <option value="">All roles</option>
+                        <option th:each="t : ${userTypes}"
+                                th:value="${t}"
+                                th:text="${t}"
+                                th:selected="${filterRole != null and filterRole == t.name()}"></option>
+                    </select>
+                </div>
+
+                <div class="filter-field">
+                    <label for="status">Status</label>
+                    <select id="status" name="status">
+                        <option value="">All statuses</option>
+                        <option th:each="s : ${statuses}"
+                                th:value="${s}"
+                                th:text="${s.label}"
+                                th:selected="${filterStatus != null and filterStatus == s.name()}"></option>
+                    </select>
+                </div>
+
+                <div class="filter-field">
+                    <label for="keyword">Search</label>
+                    <input type="text" id="keyword" name="keyword"
+                           placeholder="Name, email or phone"
+                           th:value="${filterKeyword}">
+                </div>
+
+                <div class="filter-actions">
+                    <button type="submit" class="submit-btn inline">Apply</button>
+                    <a th:href="@{/admin/users}" class="btn-ghost">Clear</a>
+                </div>
+            </form>
+        </div>
+
+        <div th:if="${users.isEmpty()}" class="panel">
+            <span class="coming-soon-badge">Nothing to show</span>
+            <h2>No users match your filters</h2>
+            <p>Try relaxing the filters above.</p>
+        </div>
+
+        <div th:if="${!users.isEmpty()}" class="listing-table-wrap">
+            <table class="listing-table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>Role</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th class="action-col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="u : ${users}">
+                    <td>
+                        <div class="cell-title" th:text="${u.firstName + ' ' + u.lastName}">Name</div>
+                        <div class="cell-sub" th:text="'ID #' + ${u.id}">ID</div>
+                    </td>
+                    <td>
+                        <div th:text="${u.email}">email</div>
+                        <div class="cell-sub" th:text="${u.countryCode + ' ' + u.phoneNumber}">phone</div>
+                    </td>
+                    <td><span class="chip" th:text="${u.userType}">RENTER</span></td>
+                    <td th:text="${u.address}">address</td>
+                    <td>
+                        <span class="status"
+                              th:classappend="${u.status != null and u.status.name() == 'ACTIVE'} ? 'status-published' : 'status-rejected'"
+                              th:text="${u.status != null ? u.status.label : 'Unknown'}">Active</span>
+                    </td>
+                    <td class="action-col">
+                        <form th:action="@{/admin/users/{id}/toggle(id=${u.id})}" method="post">
+                            <button type="submit" class="btn-small"
+                                    th:text="${u.status != null and u.status.name() == 'ACTIVE'} ? 'Deactivate' : 'Activate'">
+                                Toggle
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

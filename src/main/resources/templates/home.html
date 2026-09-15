@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RentHub BD - Find Your Next Space</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+<body class="public-page">
+
+<div th:replace="~{fragments/public-navbar :: navbar}"></div>
+
+<section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-inner">
+        <p class="hero-eyebrow">Bangladesh's rental marketplace</p>
+        <h1 class="hero-title">
+            Every rentable space,<br>
+            <span class="hero-accent">one trusted platform.</span>
+        </h1>
+        <p class="hero-subtitle">
+            From family apartments in Dhanmondi to commercial offices in Banani — discover, compare and
+            connect with verified property owners in minutes. No brokers. No hidden costs. No guesswork.
+        </p>
+        <div class="hero-actions">
+            <a th:href="@{/login}" class="hero-btn-primary">Browse Listings &rarr;</a>
+            <a th:href="@{/register}" class="hero-btn-secondary">List Your Property</a>
+        </div>
+    </div>
+</section>
+
+<section class="stats-strip">
+    <div class="stats-strip-inner">
+        <div class="stat-item">
+            <p class="stat-item-value" th:text="${statPublished}">0</p>
+            <p class="stat-item-label">Live Listings</p>
+        </div>
+        <div class="stat-item">
+            <p class="stat-item-value" th:text="${statOwners}">0</p>
+            <p class="stat-item-label">Verified Owners</p>
+        </div>
+        <div class="stat-item">
+            <p class="stat-item-value" th:text="${statRenters}">0</p>
+            <p class="stat-item-label">Active Renters</p>
+        </div>
+        <div class="stat-item">
+            <p class="stat-item-value">12</p>
+            <p class="stat-item-label">Cities Covered</p>
+        </div>
+    </div>
+</section>
+
+<section class="categories" id="categories">
+    <div class="section-header">
+        <p class="section-eyebrow">What are you looking for?</p>
+        <h2 class="section-title">Spaces for every need</h2>
+        <p class="section-subtitle">
+            Whether you're setting up a family home or scaling a business, RentHub BD has a category for it.
+        </p>
+    </div>
+
+    <div class="category-grid">
+        <a th:href="@{/login}" class="category-card">
+            <div class="category-image"
+                 style="background-image: url('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80');"></div>
+            <div class="category-body">
+                <span class="category-tag">Residential</span>
+                <h3>Apartments &amp; Homes</h3>
+                <p>Family apartments, independent houses, single rooms and shared flats across Bangladesh.</p>
+                <span class="category-link">Explore &rarr;</span>
+            </div>
+        </a>
+
+        <a th:href="@{/login}" class="category-card">
+            <div class="category-image"
+                 style="background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80');"></div>
+            <div class="category-body">
+                <span class="category-tag">Commercial</span>
+                <h3>Offices &amp; Shops</h3>
+                <p>Prime office floors, retail shops, showrooms and restaurant spaces in commercial hubs.</p>
+                <span class="category-link">Explore &rarr;</span>
+            </div>
+        </a>
+
+        <a th:href="@{/login}" class="category-card">
+            <div class="category-image"
+                 style="background-image: url('https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=800&q=80');"></div>
+            <div class="category-body">
+                <span class="category-tag">Industrial</span>
+                <h3>Warehouses &amp; Storage</h3>
+                <p>Factories, godowns and secure storage units for growing businesses and logistics.</p>
+                <span class="category-link">Explore &rarr;</span>
+            </div>
+        </a>
+
+        <a th:href="@{/login}" class="category-card">
+            <div class="category-image"
+                 style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80');"></div>
+            <div class="category-body">
+                <span class="category-tag">Other Spaces</span>
+                <h3>Land, Parking &amp; Event Venues</h3>
+                <p>Parking spots, vacant land, event spaces and every other rentable property type.</p>
+                <span class="category-link">Explore &rarr;</span>
+            </div>
+        </a>
+    </div>
+</section>
+
+<section class="features">
+    <div class="section-header">
+        <p class="section-eyebrow">Why RentHub BD</p>
+        <h2 class="section-title">Built for how Bangladesh actually rents</h2>
+        <p class="section-subtitle">
+            We replaced scattered Facebook posts, To-Let signs and unpredictable brokers with one
+            structured, transparent marketplace.
+        </p>
+    </div>
+
+    <div class="feature-grid">
+        <div class="feature-card">
+            <div class="feature-icon">&#10003;</div>
+            <h3>Verified Listings</h3>
+            <p>Every listing is reviewed by our admin team before it goes live. No fake posts, no outdated info.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">&#8363;</div>
+            <h3>Transparent Pricing</h3>
+            <p>Rent, service charge, parking and utilities shown together. Compare the total cost, not just the headline rent.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">&#9733;</div>
+            <h3>Direct Contact</h3>
+            <p>Message property owners directly. Schedule visits, negotiate and close deals without a middleman.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">&#9788;</div>
+            <h3>One Platform</h3>
+            <p>Residential, commercial, industrial, parking and land — every category under one roof with proper filters.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">&#9998;</div>
+            <h3>Owner Dashboard</h3>
+            <p>Post, edit and track your listings. See visit requests, messages and reviews in one clean panel.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">&#9878;</div>
+            <h3>Safe &amp; Moderated</h3>
+            <p>Deactivated accounts are blocked instantly. Reports are investigated. Your search stays clean.</p>
+        </div>
+    </div>
+</section>
+
+<section class="how-it-works">
+    <div class="section-header">
+        <p class="section-eyebrow">How it works</p>
+        <h2 class="section-title">Three steps to your next space</h2>
+    </div>
+
+    <div class="steps-grid">
+        <div class="step-card">
+            <span class="step-number">01</span>
+            <h3>Create your account</h3>
+            <p>Sign up as a Renter looking for a place, or an Owner wanting to list a property. Takes under two minutes.</p>
+        </div>
+        <div class="step-card">
+            <span class="step-number">02</span>
+            <h3>Search or list</h3>
+            <p>Renters filter by city, category, price, size and facilities. Owners post detailed listings with photos.</p>
+        </div>
+        <div class="step-card">
+            <span class="step-number">03</span>
+            <h3>Connect directly</h3>
+            <p>Send messages, schedule visits, agree on terms. We handle the paperwork-free discovery, you handle the deal.</p>
+        </div>
+    </div>
+</section>
+
+<section class="contact-strip" id="contact">
+    <div class="contact-inner">
+        <div class="contact-text">
+            <p class="section-eyebrow">Get in touch</p>
+            <h2>Questions, feedback or partnerships?</h2>
+            <p>
+                Our team is based in Dhaka and replies within one business day.
+                Whether you need help with a listing or want to partner with us, we'd love to hear from you.
+            </p>
+        </div>
+        <div class="contact-details">
+            <div class="contact-item">
+                <span class="contact-label">Email</span>
+                <a href="mailto:info.afnan27@gmail.com">info.afnan27@gmail.com</a>
+            </div>
+            <div class="contact-item">
+                <span class="contact-label">Phone</span>
+                <a href="tel:+8801601701444">+880 1601-701444</a>
+            </div>
+            <div class="contact-item">
+                <span class="contact-label">Location</span>
+                <span>Dhaka, Bangladesh</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div th:replace="~{fragments/public-footer :: footer}"></div>
+
+</body>
+</html>

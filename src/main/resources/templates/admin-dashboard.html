@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - RentHubBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/listing.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div class="dashboard-layout">
+    <div th:replace="~{fragments/admin-sidebar :: sidebar('dashboard', ${adminRole})}"></div>
+    <main class="dashboard-main">
+
+        <div class="dashboard-topbar page-head">
+            <div>
+                <h1>Administrator dashboard</h1>
+                <p class="subtitle">
+                    Signed in as <strong th:text="${adminUsername}">admin</strong> &middot;
+                    <span th:text="${adminRole}">ADMIN</span>
+                </p>
+            </div>
+            <div class="datetime-badge">
+                <p class="datetime-day" th:text="${#temporals.format(bdDateTime, 'EEEE')}">Friday</p>
+                <p class="datetime-full" th:text="${#temporals.format(bdDateTime, 'dd MMMM yyyy')}">11 September 2026</p>
+                <p class="datetime-time" th:text="${#temporals.format(bdDateTime, 'hh:mm a')}">03:45 PM</p>
+            </div>
+        </div>
+
+        <div class="stat-grid">
+            <div class="stat-card">
+                <p class="stat-label">Total Users</p>
+                <p class="stat-value" th:text="${stats.totalUsers}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Renters</p>
+                <p class="stat-value" th:text="${stats.totalRenters}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Owners</p>
+                <p class="stat-value" th:text="${stats.totalOwners}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Inactive Users</p>
+                <p class="stat-value" th:text="${stats.inactiveUsers}">0</p>
+            </div>
+        </div>
+
+        <div class="stat-grid">
+            <div class="stat-card">
+                <p class="stat-label">Pending Listings</p>
+                <p class="stat-value" th:text="${stats.pendingListings}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Published</p>
+                <p class="stat-value" th:text="${stats.publishedListings}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Rejected</p>
+                <p class="stat-value" th:text="${stats.rejectedListings}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Active Admins</p>
+                <p class="stat-value" th:text="${stats.activeAdmins}">0</p>
+            </div>
+        </div>
+
+        <div class="panel-head-inline">
+            <h2 class="panel-title">Recent admin activity</h2>
+            <a th:href="@{/admin/audit-log}" class="btn-link">View full log &rarr;</a>
+        </div>
+
+        <div th:if="${recentAudit.isEmpty()}" class="panel">
+            <span class="coming-soon-badge">No entries yet</span>
+            <h2>Activity will appear here</h2>
+            <p>Admin actions are appended to an audit log file in the background.</p>
+        </div>
+
+        <div th:if="${!recentAudit.isEmpty()}" class="listing-table-wrap">
+            <table class="listing-table">
+                <thead>
+                <tr>
+                    <th>When</th>
+                    <th>Actor</th>
+                    <th>Action</th>
+                    <th>Detail</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="e : ${recentAudit}">
+                    <td th:text="${#temporals.format(e.timestamp, 'dd MMM HH:mm:ss')}">timestamp</td>
+                    <td class="cell-title" th:text="${e.actor}">actor</td>
+                    <td><span class="chip" th:text="${e.actionLabel}">action</span></td>
+                    <td th:text="${e.detail}">detail</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+</div>
+</body>
+</html>
