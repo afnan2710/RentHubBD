@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Accounts - RentHubBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/listing.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div class="dashboard-layout">
+    <div th:replace="~{fragments/admin-sidebar :: sidebar('admins', ${adminRole})}"></div>
+    <main class="dashboard-main">
+
+        <div class="dashboard-topbar page-head">
+            <div>
+                <h1>Admin accounts</h1>
+                <p class="subtitle">Only superadmins can create or deactivate admin accounts.</p>
+            </div>
+            <a th:href="@{/admin/admins/register}" class="btn-primary">+ Register Admin</a>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}"   class="alert alert-error"   th:text="${error}"></div>
+
+        <div class="panel filter-bar">
+            <form method="get" th:action="@{/admin/admins}" class="filter-form filter-form-3">
+                <div class="filter-field">
+                    <label for="role">Role</label>
+                    <select id="role" name="role">
+                        <option value="">All roles</option>
+                        <option th:each="r : ${roles}"
+                                th:value="${r}"
+                                th:text="${r.label}"
+                                th:selected="${filterRole != null and filterRole == r.name()}"></option>
+                    </select>
+                </div>
+
+                <div class="filter-field">
+                    <label for="status">Status</label>
+                    <select id="status" name="status">
+                        <option value="">All statuses</option>
+                        <option th:each="s : ${statuses}"
+                                th:value="${s}"
+                                th:text="${s.label}"
+                                th:selected="${filterStatus != null and filterStatus == s.name()}"></option>
+                    </select>
+                </div>
+
+                <div class="filter-field">
+                    <label for="keyword">Username</label>
+                    <input type="text" id="keyword" name="keyword" placeholder="Search username"
+                           th:value="${filterKeyword}">
+                </div>
+
+                <div class="filter-actions">
+                    <button type="submit" class="submit-btn inline">Apply</button>
+                    <a th:href="@{/admin/admins}" class="btn-ghost">Clear</a>
+                </div>
+            </form>
+        </div>
+
+        <div th:if="${admins.isEmpty()}" class="panel">
+            <span class="coming-soon-badge">Nothing to show</span>
+            <h2>No admins match your filters</h2>
+            <p>Try relaxing the filters above.</p>
+        </div>
+
+        <div th:if="${!admins.isEmpty()}" class="listing-table-wrap">
+            <table class="listing-table">
+                <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Created</th>
+                    <th>Last Login</th>
+                    <th>Status</th>
+                    <th class="action-col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="a : ${admins}">
+                    <td class="cell-title" th:text="${a.username}">username</td>
+                    <td th:text="${a.email}">email</td>
+                    <td><span class="chip" th:text="${a.role.label}">Role</span></td>
+                    <td th:text="${#temporals.format(a.createdAt, 'dd MMM yyyy')}">date</td>
+                    <td th:text="${a.lastLoginAt != null ? #temporals.format(a.lastLoginAt, 'dd MMM HH:mm') : '—'}">—</td>
+                    <td>
+                        <span class="status"
+                              th:classappend="${a.status.name() == 'ACTIVE'} ? 'status-published' : 'status-rejected'"
+                              th:text="${a.status.label}">Active</span>
+                    </td>
+                    <td class="action-col">
+                        <form th:if="${a.id != selfId}" th:action="@{/admin/admins/{id}/toggle(id=${a.id})}" method="post">
+                            <button type="submit" class="btn-small"
+                                    th:text="${a.status.name() == 'ACTIVE'} ? 'Deactivate' : 'Activate'">Toggle</button>
+                        </form>
+                        <span th:if="${a.id == selfId}" class="hint">It's you</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>
