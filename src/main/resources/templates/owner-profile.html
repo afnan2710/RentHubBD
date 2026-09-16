@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - RentHubBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/listing.css}">
+</head>
+<body>
+<div class="dashboard-layout">
+    <div th:replace="~{fragments/owner-sidebar :: sidebar('profile')}"></div>
+    <main class="dashboard-main">
+
+        <div class="dashboard-topbar">
+            <h1>My Profile</h1>
+            <p class="subtitle">Manage your account details, photo and password.</p>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}"   class="alert alert-error"   th:text="${error}"></div>
+
+        <!-- ============ IDENTITY HEADER ============ -->
+        <div class="panel profile-hero">
+            <div class="profile-avatar">
+                <img th:if="${user.profilePhoto != null}"
+                     th:src="@{'/uploads/profile-photos/' + ${user.profilePhoto}}"
+                     alt="Profile photo">
+                <span th:if="${user.profilePhoto == null}"
+                      th:text="${#strings.substring(user.firstName, 0, 1)} + ${#strings.substring(user.lastName, 0, 1)}">AB</span>
+            </div>
+            <div class="profile-hero-info">
+                <h2 th:text="${user.firstName + ' ' + user.lastName}">Name</h2>
+                <p class="subtitle" th:text="${user.email}">email</p>
+                <span class="chip" th:text="${user.userType}">OWNER</span>
+            </div>
+            <div class="profile-hero-stats">
+                <div>
+                    <p class="stat-label">Listings</p>
+                    <p class="stat-value-small" th:text="${stats.totalListings}">0</p>
+                </div>
+                <div>
+                    <p class="stat-label">Published</p>
+                    <p class="stat-value-small" th:text="${stats.publishedListings}">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ EDIT PROFILE ============ -->
+        <form th:action="@{/owner/profile}" method="post" enctype="multipart/form-data" class="listing-form">
+
+            <section class="form-section">
+                <div class="section-head">
+                    <h2>Personal information</h2>
+                    <p>This is how renters will see you when they contact you about a listing.</p>
+                </div>
+
+                <div class="row-2">
+                    <div class="field">
+                        <label for="firstName">First name</label>
+                        <input type="text" id="firstName" name="firstName"
+                               th:value="${user.firstName}" required>
+                    </div>
+                    <div class="field">
+                        <label for="lastName">Last name</label>
+                        <input type="text" id="lastName" name="lastName"
+                               th:value="${user.lastName}" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Email</label>
+                    <input type="email" th:value="${user.email}" disabled
+                           style="background:#F4F5F7; color: var(--muted);">
+                    <p class="hint">Email can't be changed here. Contact support if needed.</p>
+                </div>
+
+                <div class="field">
+                    <label for="phoneNumber">Phone number</label>
+                    <div class="phone-row">
+                        <select name="countryCode" id="countryCode">
+                            <option th:each="opt : ${ {'+880','+91','+92','+94','+971','+966','+65','+60','+44','+1','+61','+49'} }"
+                                    th:value="${opt}"
+                                    th:text="${opt}"
+                                    th:selected="${opt == user.countryCode}"></option>
+                        </select>
+                        <input type="tel" id="phoneNumber" name="phoneNumber"
+                               th:value="${user.phoneNumber}" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="dob">Date of birth</label>
+                    <input type="date" id="dob" name="dob" th:value="${user.dob}" required>
+                </div>
+
+                <div class="field">
+                    <label for="address">Address</label>
+                    <textarea id="address" name="address" rows="3" required
+                              th:text="${user.address}"></textarea>
+                </div>
+            </section>
+
+            <!-- ============ PROFILE PHOTO ============ -->
+            <section class="form-section">
+                <div class="section-head">
+                    <h2>Profile photo</h2>
+                    <p>Optional. JPG or PNG, up to 5&nbsp;MB. Leave empty to keep your current photo.</p>
+                </div>
+
+                <div class="photo-row">
+                    <div class="photo-preview has-photo" id="photoPreview">
+                        <img th:if="${user.profilePhoto != null}"
+                             th:src="@{'/uploads/profile-photos/' + ${user.profilePhoto}}"
+                             alt="Profile photo">
+                        <span th:if="${user.profilePhoto == null}">+</span>
+                    </div>
+                    <div>
+                        <label class="upload-btn" for="profilePhoto">Change photo</label>
+                        <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*">
+                    </div>
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <a th:href="@{/owner/dashboard}" class="btn-ghost">Cancel</a>
+                <button type="submit" class="submit-btn inline">Save Changes</button>
+            </div>
+        </form>
+
+        <!-- ============ CHANGE PASSWORD ============ -->
+        <form th:action="@{/owner/profile/password}" method="post" class="listing-form"
+              style="margin-top: 22px;">
+
+            <section class="form-section">
+                <div class="section-head">
+                    <h2>Change password</h2>
+                    <p>Use at least 8 characters, mixing letters, numbers and symbols.</p>
+                </div>
+
+                <div th:if="${passwordSuccess}" class="alert alert-success" th:text="${passwordSuccess}"></div>
+                <div th:if="${passwordError}"   class="alert alert-error"   th:text="${passwordError}"></div>
+
+                <div class="field">
+                    <label for="currentPassword">Current password</label>
+                    <input type="password" id="currentPassword" name="currentPassword" required>
+                </div>
+
+                <div class="row-2">
+                    <div class="field">
+                        <label for="newPassword">New password</label>
+                        <input type="password" id="newPassword" name="newPassword" required>
+                    </div>
+                    <div class="field">
+                        <label for="confirmPassword">Retype new password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required>
+                        <p class="hint" id="matchLabel"></p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <button type="submit" class="submit-btn inline">Update Password</button>
+            </div>
+        </form>
+
+    </main>
+</div>
+
+<script th:src="@{/js/register.js}"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+.dashboard-card {
+    max-width: 480px;
+    text-align: center;
+}
+
+.logout-btn {
+    display: inline-block;
+    text-decoration: none;
+    margin-top: 20px;
+}
