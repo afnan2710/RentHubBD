@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner Dashboard - RentHubBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/listing.css}">
+</head>
+<body>
+<div class="dashboard-layout">
+    <div th:replace="~{fragments/owner-sidebar :: sidebar('dashboard')}"></div>
+    <main class="dashboard-main">
+
+        <div class="dashboard-topbar page-head">
+            <div>
+                <h1>Welcome back, <span th:text="${firstName}">Owner</span></h1>
+                <p class="subtitle">Here's what's happening with your properties.</p>
+            </div>
+            <div class="datetime-badge">
+                <p class="datetime-day" th:text="${#temporals.format(bdDateTime, 'EEEE')}">Friday</p>
+                <p class="datetime-full" th:text="${#temporals.format(bdDateTime, 'dd MMMM yyyy')}">11 September 2026</p>
+                <p class="datetime-time" th:text="${#temporals.format(bdDateTime, 'hh:mm a')}">03:45 PM</p>
+            </div>
+        </div>
+
+        <div class="stat-grid">
+            <div class="stat-card">
+                <p class="stat-label">Published</p>
+                <p class="stat-value" th:text="${stats.publishedListings}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Pending Review</p>
+                <p class="stat-value" th:text="${stats.pendingListings}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Visit Requests</p>
+                <p class="stat-value" th:text="${stats.pendingVisits}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Average Rating</p>
+                <p class="stat-value"
+                   th:text="${stats.averageRating != null} ? ${#numbers.formatDecimal(stats.averageRating, 1, 1)} : '—'">—</p>
+            </div>
+        </div>
+
+        <div class="panel-head-inline">
+            <h2 class="panel-title">Recent Listings</h2>
+            <a th:href="@{/owner/listings}" class="btn-link">View all →</a>
+        </div>
+
+        <div th:if="${recentListings.isEmpty()}" class="panel">
+            <span class="coming-soon-badge">No listings yet</span>
+            <h2>Post your first rental property</h2>
+            <p>You haven't added any listings. Click <strong>Add New Listing</strong> to get started.</p>
+        </div>
+
+        <div th:if="${!recentListings.isEmpty()}" class="listing-table-wrap">
+            <table class="listing-table">
+                <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Location</th>
+                    <th>Total / month</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p : ${recentListings}">
+                    <td>
+                        <div class="cell-title" th:text="${p.title}">Title</div>
+                        <div class="cell-sub" th:text="${p.propertyType.label}">Type</div>
+                    </td>
+                    <td th:text="${p.area + ', ' + p.city}">Location</td>
+                    <td class="cell-amount"
+                        th:text="'৳ ' + ${#numbers.formatDecimal(p.totalMonthlyCost, 1, 'COMMA', 0, 'POINT')}">৳ 0</td>
+                    <td>
+                        <span class="status"
+                              th:classappend="'status-' + ${#strings.toLowerCase(p.status.name())}"
+                              th:text="${p.status.label}">Pending</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+</div>
+</body>
+</html>

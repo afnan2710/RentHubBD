@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renter Dashboard - RentHubBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+<div class="page">
+    <div class="card dashboard-card">
+        <p class="eyebrow">RentHub BD</p>
+        <h1>Welcome, <span th:text="${firstName}">Renter</span></h1>
+        <p class="subtitle">This is your Renter dashboard. Property search is coming soon.</p>
+        <a th:href="@{/logout}" class="submit-btn logout-btn">Log Out</a>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Listings - RentHubBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/listing.css}">
+</head>
+<body>
+<div class="dashboard-layout">
+    <div th:replace="~{fragments/owner-sidebar :: sidebar('listings')}"></div>
+    <main class="dashboard-main">
+
+        <div class="dashboard-topbar page-head">
+            <div>
+                <h1>My Listings</h1>
+                <p class="subtitle">All properties you've posted, and their moderation status.</p>
+            </div>
+            <a th:href="@{/owner/listings/new}" class="btn-primary">+ Add New Listing</a>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}"   class="alert alert-error"   th:text="${error}"></div>
+
+        <div class="stat-grid" th:if="${!listings.isEmpty()}">
+            <div class="stat-card">
+                <p class="stat-label">Total</p>
+                <p class="stat-value" th:text="${listings.size()}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Pending</p>
+                <p class="stat-value"
+                   th:text="${statusSummary.get(T(com.aoop.renthubbd.model.ListingStatus).PENDING) ?: 0}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Published</p>
+                <p class="stat-value"
+                   th:text="${statusSummary.get(T(com.aoop.renthubbd.model.ListingStatus).PUBLISHED) ?: 0}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Rejected</p>
+                <p class="stat-value"
+                   th:text="${statusSummary.get(T(com.aoop.renthubbd.model.ListingStatus).REJECTED) ?: 0}">0</p>
+            </div>
+        </div>
+
+        <div th:if="${listings.isEmpty()}" class="panel">
+            <span class="coming-soon-badge">No listings yet</span>
+            <h2>Post your first rental property</h2>
+            <p>You haven't added any listings. Click <strong>Add New Listing</strong> to get started.</p>
+        </div>
+
+        <div th:if="${!listings.isEmpty()}" class="listing-table-wrap">
+            <table class="listing-table">
+                <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Category</th>
+                    <th>Location</th>
+                    <th>Total / month</th>
+                    <th>Status</th>
+                    <th>Posted</th>
+                    <th class="action-col">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p : ${listings}">
+                    <td>
+                        <div class="cell-title" th:text="${p.title}">Title</div>
+                        <div class="cell-sub" th:text="${p.propertyType.label}">Type</div>
+                    </td>
+                    <td><span class="chip" th:text="${p.category.label}">Category</span></td>
+                    <td th:text="${p.area + ', ' + p.city}">Location</td>
+                    <td class="cell-amount"
+                        th:text="'৳ ' + ${#numbers.formatDecimal(p.totalMonthlyCost, 1, 'COMMA', 0, 'POINT')}">৳ 0</td>
+                    <td>
+                        <span class="status"
+                              th:classappend="'status-' + ${#strings.toLowerCase(p.status.name())}"
+                              th:text="${p.status.label}">Status</span>
+                    </td>
+                    <td th:text="${#temporals.format(p.createdAt, 'dd MMM yyyy')}">Date</td>
+
+                    <td class="action-col">
+                        <!-- Non-rejected listings: show Edit button -->
+                        <a th:if="${p.status.name() != 'REJECTED'}"
+                           th:href="@{/owner/listings/{id}/edit(id=${p.id})}"
+                           class="btn-small">Edit</a>
+
+                        <!-- Rejected listings: show the admin note in place of the button,
+                             with a small "Fix & resubmit" link -->
+                        <div th:if="${p.status.name() == 'REJECTED'}" class="rejection-block">
+                            <p class="rejection-note">
+                                <strong>Admin:</strong>
+                                <span th:text="${p.rejectionReason != null ? p.rejectionReason : 'No reason given.'}">Reason</span>
+                            </p>
+                            <a th:href="@{/owner/listings/{id}/edit(id=${p.id})}"
+                               class="btn-link">Fix &amp; resubmit →</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - RentHubBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/listing.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div class="dashboard-layout">
+    <div th:if="${rolePath == '/owner'}"
+         th:replace="~{fragments/owner-sidebar :: sidebar('notifications')}"></div>
+    <main class="dashboard-main">
+
+        <div class="dashboard-topbar page-head">
+            <div>
+                <h1>Notifications</h1>
+                <p class="subtitle">Updates about your listings and account.</p>
+            </div>
+            <form th:action="@{${rolePath} + '/notifications/read-all'}" method="post">
+                <button type="submit" class="btn-primary">Mark all as read</button>
+            </form>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}"   class="alert alert-error"   th:text="${error}"></div>
+
+        <div th:if="${notifications.isEmpty()}" class="panel">
+            <span class="coming-soon-badge">Empty</span>
+            <h2>No notifications yet</h2>
+            <p>You'll see updates here when an admin approves or rejects your listings.</p>
+        </div>
+
+        <div th:if="${!notifications.isEmpty()}" class="notification-list">
+            <div th:each="n : ${notifications}"
+                 th:classappend="${n.read} ? 'notification-read' : 'notification-unread'"
+                 class="notification-item">
+                <div class="notification-icon">
+                    <span th:if="${n.type.name() == 'LISTING_APPROVED'}">&#10003;</span>
+                    <span th:if="${n.type.name() == 'LISTING_REJECTED'}">&#10005;</span>
+                    <span th:if="${n.type.name() != 'LISTING_APPROVED' and n.type.name() != 'LISTING_REJECTED'}">&#8226;</span>
+                </div>
+                <div class="notification-body">
+                    <div class="notification-head">
+                        <span class="notification-title" th:text="${n.title}">Title</span>
+                        <span class="notification-time"
+                              th:text="${#temporals.format(n.createdAt, 'dd MMM yyyy, hh:mm a')}">time</span>
+                    </div>
+                    <p class="notification-message" th:text="${n.message}">Message</p>
+                    <div class="notification-actions">
+                        <a th:if="${n.relatedListingId != null and rolePath == '/owner'}"
+                           th:href="@{/owner/listings/{id}/edit(id=${n.relatedListingId})}"
+                           class="btn-link">Open listing &rarr;</a>
+                        <form th:if="${!n.read}"
+                              th:action="@{${rolePath} + '/notifications/' + ${n.id} + '/read'}"
+                              method="post" style="display:inline;">
+                            <button type="submit" class="btn-link">Mark as read</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
