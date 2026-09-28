@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${mode == 'edit'} ? 'Edit Listing - RentHubBD' : 'Add New Listing - RentHubBD'">New Listing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/listing.css}">
+</head>
+<body>
+<div class="dashboard-layout">
+    <div th:replace="~{fragments/owner-sidebar :: sidebar(${activeNav})}"></div>
+    <main class="dashboard-main">
+
+        <div class="dashboard-topbar">
+            <h1 th:text="${mode == 'edit'} ? 'Edit Listing' : 'Add New Listing'">Add New Listing</h1>
+            <p class="subtitle" th:if="${mode != 'edit'}">Fill in the details below. Your listing will be reviewed by an admin before it goes live.</p>
+            <p class="subtitle" th:if="${mode == 'edit'}">Editing will send this listing back for admin review. It won't be live until re-approved.</p>
+        </div>
+
+        <!-- Rejection banner shown when the owner is fixing a rejected listing -->
+        <div th:if="${mode == 'edit' and currentStatus != null and currentStatus.name() == 'REJECTED'}"
+             class="alert alert-error"
+             style="display:block;">
+            <strong>Previous admin note:</strong>
+            <span th:text="${rejectionReason != null ? rejectionReason : 'No reason given.'}">Reason</span>
+        </div>
+
+        <div th:if="${error}"   class="alert alert-error"   th:text="${error}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
+        <form th:action="${mode == 'edit'}
+                            ? @{/owner/listings/{id}/edit(id=${listingForm.id})}
+                            : @{/owner/listings/new}"
+              th:object="${listingForm}"
+              method="post"
+              enctype="multipart/form-data"
+              class="listing-form">
+
+            <!-- ============ BASIC INFO ============ -->
+            <section class="form-section">
+                <div class="section-head">
+                    <h2>Basic information</h2>
+                    <p>What are you renting out and how should renters see it?</p>
+                </div>
+
+                <div class="field">
+                    <label for="title">Listing title</label>
+                    <input type="text" id="title" th:field="*{title}" maxlength="120"
+                           placeholder="e.g. Spacious 3-bedroom apartment in Dhanmondi" required>
+                </div>
+
+                <div class="field">
+                    <label for="description">Description</label>
+                    <textarea id="description" th:field="*{description}" rows="5" maxlength="2000"
+                              placeholder="Describe the property, surroundings, nearby amenities, and any special rules."></textarea>
+                    <p class="hint">Optional but strongly recommended.</p>
+                </div>
+
+                <div class="row-2">
+                    <div class="field">
+                        <label for="category">Category</label>
+                        <select id="category" th:field="*{category}" required>
+                            <option value="">Select category</option>
+                            <option th:each="c : ${T(com.aoop.renthubbd.model.PropertyCategory).values()}"
+                                    th:value="${c}" th:text="${c.label}"></option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="propertyType">Property type</label>
+                        <select id="propertyType" th:field="*{propertyType}"
+                                th:attr="data-initial-value=${listingForm.propertyType != null ? listingForm.propertyType.name() : ''}"
+                                required disabled>
+                            <option value="">Select a category first</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ LOCATION ============ -->
+            <section class="form-section">
+                <div class="section-head">
+                    <h2>Location</h2>
+                    <p>Where is the property? Renters search heavily by area.</p>
+                </div>
+
+                <div class="field">
+                    <label for="address">Street address</label>
+                    <input type="text" id="address" th:field="*{address}" required>
+                </div>
+
+                <div class="row-3">
+                    <div class="field">
+                        <label for="city">City</label>
+                        <input type="text" id="city" th:field="*{city}" required>
+                    </div>
+                    <div class="field">
+                        <label for="area">Area / Thana</label>
+                        <input type="text" id="area" th:field="*{area}" required>
+                    </div>
+                    <div class="field">
+                        <label for="postalCode">Postal code</label>
+                        <input type="text" id="postalCode" th:field="*{postalCode}">
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ PRICING ============ -->
+            <section class="form-section">
+                <div class="section-head">
+                    <h2>Pricing</h2>
+                    <p>Total monthly cost is shown to renters so there are no surprises later.</p>
+                </div>
+
+                <div class="row-3">
+                    <div class="field">
+                        <label for="monthlyRent">Monthly rent (৳)</label>
+                        <input type="number" id="monthlyRent" th:field="*{monthlyRent}" min="0" step="100" required>
+                    </div>
+                    <div class="field">
+                        <label for="serviceCharge">Service charge (৳)</label>
+                        <input type="number" id="serviceCharge" th:field="*{serviceCharge}" min="0" step="100">
+                    </div>
+                    <div class="field">
+                        <label for="parkingFee">Parking fee (৳)</label>
+                        <input type="number" id="parkingFee" th:field="*{parkingFee}" min="0" step="100">
+                    </div>
+                </div>
+
+                <div class="row-3">
+                    <div class="field">
+                        <label for="utilityEstimate">Estimated utilities (৳)</label>
+                        <input type="number" id="utilityEstimate" th:field="*{utilityEstimate}" min="0" step="100">
+                    </div>
+                    <div class="field">
+                        <label for="advanceMonths">Advance (months)</label>
+                        <input type="number" id="advanceMonths" th:field="*{advanceMonths}" min="0" max="12">
+                    </div>
+                    <div class="field">
+                        <label>Total monthly cost</label>
+                        <div class="computed-value" id="totalCostDisplay">৳ 0</div>
+                        <p class="hint">Auto-computed from the fields above.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ SIZE & ROOMS ============ -->
+            <section class="form-section">
+                <div class="section-head">
+                    <h2>Size &amp; layout</h2>
+                    <p>Some fields only apply to residential properties.</p>
+                </div>
+
+                <div class="row-3">
+                    <div class="field">
+                        <label for="sizeSqft">Size (sqft)</label>
+                        <input type="number" id="sizeSqft" th:field="*{sizeSqft}" min="0" step="10">
+                    </div>
+                    <div class="field residential-only">
+                        <label for="bedrooms">Bedrooms</label>
+                        <input type="number" id="bedrooms" th:field="*{bedrooms}" min="0" max="20">
+                    </div>
+                    <div class="field residential-only">
+                        <label for="bathrooms">Bathrooms</label>
+                        <input type="number" id="bathrooms" th:field="*{bathrooms}" min="0" max="20">
+                    </div>
+                </div>
+
+                <div class="row-3">
+                    <div class="field">
+                        <label for="floorNumber">Floor number</label>
+                        <input type="number" id="floorNumber" th:field="*{floorNumber}">
+                    </div>
+                    <div class="field">
+                        <label for="totalFloors">Total floors in building</label>
+                        <input type="number" id="totalFloors" th:field="*{totalFloors}" min="0">
+                    </div>
+                    <div class="field">
+                        <label for="availableFrom">Available from</label>
+                        <input type="date" id="availableFrom" th:field="*{availableFrom}">
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ FACILITIES ============ -->
+            <section class="form-section">
+                <div class="section-head">
+                    <h2>Facilities</h2>
+                    <p>Tick everything that applies. Renters filter by these.</p>
+                </div>
+
+                <div class="facility-grid">
+                    <label class="facility-card"
+                           th:each="f : ${ {'Electricity','Water Supply','Gas','Lift','Generator','24/7 Security','WiFi Ready','Air Conditioning','Attached Bathroom','Balcony','Furnished','Pet Friendly','Parking Space','CCTV'} }">
+                        <input type="checkbox" name="facilities" th:value="${f}"
+                               th:checked="${listingForm.facilities != null and listingForm.facilities.contains(f)}">
+                        <span th:text="${f}">Facility</span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- ============ PHOTOS ============ -->
+            <section class="form-section">
+                <div class="section-head">
+                    <h2>Photos</h2>
+                    <p th:if="${mode != 'edit'}">Up to 8 photos. First one becomes the cover image.</p>
+                    <p th:if="${mode == 'edit'}">Leave empty to keep the current photos. Uploading new ones replaces them.</p>
+                </div>
+
+                <!-- Show current photos in edit mode -->
+                <div th:if="${mode == 'edit' and existingPhotos != null and !existingPhotos.isEmpty()}"
+                     class="existing-photos">
+                    <p class="hint">Current photos:</p>
+                    <div class="photo-preview-grid">
+                        <div class="thumb" th:each="path : ${existingPhotos}">
+                            <img th:src="@{'/uploads/' + ${path}}" alt="Listing photo">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="photo-upload-row">
+                    <label for="photos" class="upload-btn" th:text="${mode == 'edit'} ? 'Choose new photos' : 'Choose photos'">Choose photos</label>
+                    <input type="file" id="photos" name="photos" accept="image/*" multiple>
+                    <span class="hint" id="photoCount">No new photos selected</span>
+                </div>
+
+                <div class="photo-preview-grid" id="photoPreviewGrid"></div>
+            </section>
+
+            <div class="form-actions">
+                <a th:href="@{/owner/listings}" class="btn-ghost">Cancel</a>
+                <button type="submit" class="submit-btn inline"
+                        th:text="${mode == 'edit'} ? 'Save & Resubmit for Review' : 'Submit for Review'">
+                    Submit for Review
+                </button>
+            </div>
+
+        </form>
+    </main>
+</div>
+
+<script th:inline="javascript">
+    window.RENTHUB_PROPERTY_TYPES = /*[[${propertyTypes}]]*/ [];
+</script>
+<script th:src="@{/js/listing.js}"></script>
+</body>
+</html>

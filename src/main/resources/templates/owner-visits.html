@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visit Requests - RentHubBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/listing.css}">
+    <link rel="stylesheet" th:href="@{/css/explore.css}">
+</head>
+<body>
+<div class="dashboard-layout">
+    <div th:replace="~{fragments/owner-sidebar :: sidebar('visits')}"></div>
+    <main class="dashboard-main">
+
+        <div class="dashboard-topbar">
+            <h1>Visit requests</h1>
+            <p class="subtitle">Respond to renters who want to see your properties.</p>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}"   class="alert alert-error"   th:text="${error}"></div>
+
+        <div class="stat-grid">
+            <div class="stat-card">
+                <p class="stat-label">Pending</p>
+                <p class="stat-value"
+                   th:text="${summary.get(T(com.aoop.renthubbd.model.VisitStatus).PENDING) ?: 0}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Accepted</p>
+                <p class="stat-value"
+                   th:text="${summary.get(T(com.aoop.renthubbd.model.VisitStatus).ACCEPTED) ?: 0}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Rescheduled</p>
+                <p class="stat-value"
+                   th:text="${summary.get(T(com.aoop.renthubbd.model.VisitStatus).RESCHEDULED) ?: 0}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Total</p>
+                <p class="stat-value" th:text="${visits.size()}">0</p>
+            </div>
+        </div>
+
+        <div class="panel filter-bar">
+            <form method="get" th:action="@{/owner/visit-requests}" class="filter-form filter-form-2">
+                <div class="filter-field">
+                    <label for="status">Status</label>
+                    <select id="status" name="status">
+                        <option value="">All statuses</option>
+                        <option th:each="s : ${statuses}"
+                                th:value="${s}"
+                                th:text="${s.label}"
+                                th:selected="${filterStatus != null and filterStatus == s.name()}"></option>
+                    </select>
+                </div>
+                <div class="filter-actions">
+                    <button type="submit" class="submit-btn inline">Apply</button>
+                    <a th:href="@{/owner/visit-requests}" class="btn-ghost">Clear</a>
+                </div>
+            </form>
+        </div>
+
+        <div th:if="${visits.isEmpty()}" class="panel">
+            <h3>No visit requests</h3>
+            <p>When renters request a visit on your listings, they will appear here.</p>
+        </div>
+
+        <div th:if="${!visits.isEmpty()}" class="visit-cards">
+            <article th:each="v : ${visits}" class="visit-card">
+                <div class="visit-card-head">
+                    <div>
+                        <p class="visit-property" th:text="${v.property.title}">Property</p>
+                        <p class="visit-location">
+                            Requested by
+                            <strong th:text="${v.renter.firstName + ' ' + v.renter.lastName}">Renter</strong>
+                            &middot; <span th:text="${v.renter.email}">email</span>
+                        </p>
+                    </div>
+                    <span class="status"
+                          th:classappend="'status-' + ${#strings.toLowerCase(v.status.name())}"
+                          th:text="${v.status.label}">Status</span>
+                </div>
+
+                <div class="visit-details">
+                    <div class="visit-detail">
+                        <span class="visit-label">Requested time</span>
+                        <span th:text="${#temporals.format(v.requestedDate, 'dd MMM yyyy')} + ' · ' + ${v.requestedTime}">—</span>
+                    </div>
+                    <div class="visit-detail" th:if="${v.message != null and !v.message.isBlank()}">
+                        <span class="visit-label">Renter's message</span>
+                        <span th:text="${v.message}">—</span>
+                    </div>
+                    <div class="visit-detail" th:if="${v.proposedDate != null}">
+                        <span class="visit-label">You proposed</span>
+                        <span th:text="${#temporals.format(v.proposedDate, 'dd MMM yyyy')} + ' · ' + ${v.proposedTime}">—</span>
+                    </div>
+                    <div class="visit-detail" th:if="${v.ownerNote != null}">
+                        <span class="visit-label">Your note</span>
+                        <span th:text="${v.ownerNote}">—</span>
+                    </div>
+                </div>
+
+                <div class="visit-actions-group" th:if="${v.status.name() == 'PENDING'}">
+                    <form th:action="@{/owner/visit-requests/{id}/accept(id=${v.id})}" method="post" class="visit-action-form">
+                        <input type="text" name="note" placeholder="Optional note to renter">
+                        <button type="submit" class="btn-small btn-approve">Accept</button>
+                    </form>
+
+                    <form th:action="@{/owner/visit-requests/{id}/reject(id=${v.id})}" method="post" class="visit-action-form">
+                        <input type="text" name="note" placeholder="Reason for declining">
+                        <button type="submit" class="btn-small btn-reject"
+                                onclick="return confirm('Decline this visit?');">Reject</button>
+                    </form>
+
+                    <form th:action="@{/owner/visit-requests/{id}/reschedule(id=${v.id})}" method="post" class="visit-action-form">
+                        <input type="date" name="proposedDate" required>
+                        <select name="proposedTime" required>
+                            <option value="">Time</option>
+                            <option value="Morning">Morning</option>
+                            <option value="Afternoon">Afternoon</option>
+                            <option value="Evening">Evening</option>
+                        </select>
+                        <input type="text" name="note" placeholder="Optional note">
+                        <button type="submit" class="btn-small">Reschedule</button>
+                    </form>
+                </div>
+
+                <div class="visit-actions">
+                    <a th:href="@{/listing/{id}(id=${v.property.id})}" class="btn-small">View listing</a>
+                </div>
+            </article>
+        </div>
+
+    </main>
+</div>
+</body>
+</html>
