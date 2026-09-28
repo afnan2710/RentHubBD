@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Spaces - RentHub BD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <style>
+        body.public-page {
+            background: #F4F5F7;
+            font-family: 'Share Tech', sans-serif;
+            color: #14213D;
+        }
+
+        .xp-hero {
+            background: linear-gradient(135deg, #0B1626 0%, #14283F 100%);
+            padding: 60px 32px 46px;
+            color: #FFFFFF;
+            position: relative;
+            overflow: hidden;
+        }
+        .xp-hero::after {
+            content: '';
+            position: absolute;
+            right: -10%;
+            top: -50%;
+            width: 50%;
+            height: 200%;
+            background: radial-gradient(ellipse, rgba(201,162,39,0.18), transparent 65%);
+            pointer-events: none;
+        }
+        .xp-hero-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        .xp-eyebrow {
+            font-size: 12px; font-weight: 700; letter-spacing: 0.18em;
+            text-transform: uppercase; color: #C9A227; margin: 0 0 14px;
+        }
+        .xp-title {
+            font-size: 40px; line-height: 1.1; font-weight: 400;
+            margin: 0 0 12px; letter-spacing: -0.01em; color: white;
+        }
+        .xp-sub {
+            font-size: 15px; line-height: 1.6;
+            color: rgba(255,255,255,0.7); margin: 0;
+            max-width: 620px;
+        }
+
+        .xp-body {
+            padding: 36px 32px 80px;
+        }
+        .xp-layout {
+            max-width: 1280px; margin: 0 auto;
+            display: grid; grid-template-columns: 300px 1fr;
+            gap: 24px; align-items: start;
+        }
+
+        .xp-sidebar {
+            background: #FFFFFF;
+            border: 1px solid #E2E5EA;
+            border-radius: 16px;
+            padding: 24px 22px 22px;
+            position: sticky; top: 88px;
+            box-shadow: 0 4px 16px rgba(8,17,31,0.04);
+        }
+        .xp-sidebar-head {
+            display: flex; justify-content: space-between;
+            align-items: baseline; margin-bottom: 22px;
+            padding-bottom: 16px; border-bottom: 1px solid #E2E5EA;
+        }
+        .xp-sidebar-head h3 {
+            font-size: 13px; font-weight: 700; letter-spacing: 0.06em;
+            text-transform: uppercase; color: #14213D; margin: 0;
+        }
+        .xp-reset-link {
+            font-size: 12px; font-weight: 600;
+            color: #C9A227; text-decoration: none;
+        }
+        .xp-reset-link:hover { text-decoration: underline; }
+
+        .xp-field {
+            margin-bottom: 20px;
+        }
+        .xp-field-label {
+            display: flex; justify-content: space-between;
+            align-items: baseline; font-size: 12px; font-weight: 600;
+            color: #5B6472; margin-bottom: 8px;
+            letter-spacing: 0.02em;
+        }
+        .xp-field-label .xp-label-value {
+            color: #C9A227; font-weight: 700;
+        }
+
+        .xp-input,
+        .xp-select {
+            width: 100%; padding: 11px 14px; font-size: 13px;
+            border: 1.5px solid #E2E5EA; border-radius: 10px;
+            background: #FFFFFF; color: #14213D;
+            font-family: inherit; outline: none; box-sizing: border-box;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        .xp-input:focus,
+        .xp-select:focus {
+            border-color: #C9A227;
+            box-shadow: 0 0 0 3px rgba(201,162,39,0.15);
+        }
+
+        .xp-range-container {
+            position: relative;
+            height: 40px;
+            margin: 6px 0 12px;
+        }
+        .xp-range-track {
+            position: absolute;
+            top: 50%; left: 0; right: 0;
+            height: 4px;
+            background: #E2E5EA;
+            border-radius: 2px;
+            transform: translateY(-50%);
+        }
+        .xp-range-fill {
+            position: absolute;
+            height: 100%;
+            background: linear-gradient(90deg, #C9A227, #E4C767);
+            border-radius: 2px;
+            transition: none;
+        }
+        .xp-range-container input[type="range"] {
+            position: absolute;
+            top: 50%; left: 0;
+            width: 100%; height: 4px;
+            background: transparent;
+            -webkit-appearance: none;
+            appearance: none;
+            pointer-events: none;
+            transform: translateY(-50%);
+            margin: 0;
+            outline: none;
+        }
+        .xp-range-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px; height: 20px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            border: 3px solid #C9A227;
+            cursor: grab;
+            pointer-events: auto;
+            box-shadow: 0 2px 8px rgba(8,17,31,0.15);
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+        .xp-range-container input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(201,162,39,0.4);
+        }
+        .xp-range-container input[type="range"]::-webkit-slider-thumb:active {
+            cursor: grabbing;
+        }
+        .xp-range-container input[type="range"]::-moz-range-thumb {
+            width: 14px; height: 14px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            border: 3px solid #C9A227;
+            cursor: grab;
+            pointer-events: auto;
+            box-shadow: 0 2px 8px rgba(8,17,31,0.15);
+        }
+        #maxRentSlider { z-index: 5; }
+
+        .xp-range-values {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #14213D;
+        }
+        .xp-range-values span {
+            background: #FBF6E8;
+            border: 1px solid #EFDFA8;
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: #8A6D1B;
+        }
+
+        .xp-chips {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+        }
+        .xp-chip {
+            padding: 9px 4px;
+            background: #F7F8FA;
+            border: 1.5px solid #E2E5EA;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #14213D;
+            cursor: pointer;
+            font-family: inherit;
+            text-align: center;
+            transition: all 0.15s ease;
+        }
+        .xp-chip:hover {
+            border-color: #C9A227;
+        }
+        .xp-chip.is-active {
+            background: #FBF6E8;
+            border-color: #C9A227;
+            color: #8A6D1B;
+            box-shadow: 0 2px 8px rgba(201,162,39,0.2);
+        }
+
+        .xp-btn-row {
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .xp-apply {
+            width: 100%;
+            padding: 13px 16px;
+            background: linear-gradient(135deg, #14213D, #14283F);
+            color: #E4C767;
+            border: 1.5px solid #C9A227;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .xp-apply:hover {
+            background: linear-gradient(135deg, #C9A227, #E4C767);
+            color: #14213D;
+            box-shadow: 0 8px 20px rgba(201,162,39,0.3);
+        }
+
+        .xp-results {
+            min-width: 0;
+        }
+        .xp-results-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .xp-count {
+            font-size: 14px;
+            color: #5B6472;
+            margin: 0;
+        }
+        .xp-count strong {
+            color: #14213D;
+            font-size: 22px;
+            font-weight: 700;
+            margin-right: 4px;
+        }
+        .xp-count-tag {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 3px 10px;
+            background: #FBF6E8;
+            border: 1px solid #EFDFA8;
+            color: #8A6D1B;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border-radius: 999px;
+        }
+        .xp-sort {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .xp-sort-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #5B6472;
+        }
+        .xp-sort select {
+            padding: 9px 12px;
+            border: 1.5px solid #E2E5EA;
+            border-radius: 8px;
+            background: #FFFFFF;
+            font-family: inherit;
+            font-size: 13px;
+            color: #14213D;
+            outline: none;
+            cursor: pointer;
+        }
+        .xp-sort select:focus {
+            border-color: #C9A227;
+        }
+
+        .xp-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 22px;
+        }
+
+        .xp-card {
+            display: flex;
+            flex-direction: column;
+            background: #FFFFFF;
+            border: 1px solid #E2E5EA;
+            border-radius: 16px;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.25s cubic-bezier(0.4,0,0.2,1),
+                        box-shadow 0.25s, border-color 0.25s;
+        }
+        .xp-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 26px 50px rgba(8,17,31,0.14);
+            border-color: #C9A227;
+        }
+
+        .xp-card-img {
+            position: relative;
+            aspect-ratio: 4 / 3;
+            background: #EEF1F5;
+            overflow: hidden;
+        }
+        .xp-card-img img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+        .xp-card:hover .xp-card-img img {
+            transform: scale(1.08);
+        }
+        .xp-card-img::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                        rgba(11,22,38,0.15) 0%,
+                        transparent 30%,
+                        transparent 60%,
+                        rgba(11,22,38,0.35) 100%);
+            pointer-events: none;
+        }
+        .xp-card-img-ph {
+            display: flex; align-items: center; justify-content: center;
+            height: 100%; color: #5B6472; font-size: 13px;
+        }
+        .xp-card-cat {
+            position: absolute;
+            top: 14px; left: 14px;
+            background: rgba(11,22,38,0.85);
+            color: #E4C767;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 6px 12px;
+            border-radius: 999px;
+            backdrop-filter: blur(8px);
+            z-index: 2;
+        }
+        .xp-card-price {
+            position: absolute;
+            bottom: 14px; right: 14px;
+            background: linear-gradient(135deg, #C9A227, #E4C767);
+            color: #0B1626;
+            padding: 7px 14px;
+            border-radius: 999px;
+            box-shadow: 0 6px 16px rgba(201,162,39,0.4);
+            z-index: 2;
+            display: flex;
+            align-items: baseline;
+            gap: 2px;
+        }
+        .xp-card-price strong {
+            font-size: 14px;
+            font-weight: 700;
+        }
+        .xp-card-price small {
+            font-size: 10px;
+            opacity: 0.75;
+            font-weight: 600;
+        }
+
+        .xp-card-body {
+            padding: 20px 22px 22px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .xp-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #14213D;
+            margin: 0;
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 43px;
+        }
+        .xp-card-loc {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #5B6472;
+            margin: 0;
+        }
+        .xp-card-loc svg {
+            flex-shrink: 0;
+            color: #C9A227;
+        }
+
+        .xp-card-meta {
+            display: flex;
+            gap: 0;
+            padding: 14px 0;
+            border-top: 1px dashed #E2E5EA;
+            border-bottom: 1px dashed #E2E5EA;
+        }
+        .xp-card-meta-item {
+            flex: 1;
+            text-align: center;
+            border-right: 1px dashed #E2E5EA;
+        }
+        .xp-card-meta-item:last-child {
+            border-right: none;
+        }
+        .xp-card-meta-value {
+            display: block;
+            font-size: 15px;
+            font-weight: 700;
+            color: #14213D;
+            line-height: 1.2;
+        }
+        .xp-card-meta-label {
+            display: block;
+            font-size: 10px;
+            font-weight: 600;
+            color: #5B6472;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-top: 3px;
+        }
+
+        .xp-card-foot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 4px;
+            font-size: 12px;
+        }
+        .xp-card-type {
+            color: #5B6472;
+            font-weight: 500;
+        }
+        .xp-card-cta {
+            color: #C9A227;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: gap 0.2s ease;
+        }
+        .xp-card:hover .xp-card-cta {
+            gap: 8px;
+        }
+
+        .xp-empty {
+            background: #FFFFFF;
+            border: 1px solid #E2E5EA;
+            border-radius: 16px;
+            padding: 80px 40px;
+            text-align: center;
+        }
+        .xp-empty-icon {
+            font-size: 48px;
+            color: #EFDFA8;
+            margin: 0 0 16px;
+            line-height: 1;
+        }
+        .xp-empty h3 {
+            font-size: 20px;
+            font-weight: 500;
+            color: #14213D;
+            margin: 0 0 8px;
+        }
+        .xp-empty p {
+            font-size: 14px;
+            color: #5B6472;
+            margin: 0 0 24px;
+        }
+        .xp-empty-btn {
+            display: inline-block;
+            padding: 13px 30px;
+            background: linear-gradient(135deg, #C9A227, #E4C767);
+            color: #0B1626;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        @media (max-width: 1024px) {
+            .xp-layout { grid-template-columns: 1fr; }
+            .xp-sidebar { position: static; }
+        }
+        @media (max-width: 640px) {
+            .xp-hero { padding: 44px 20px 34px; }
+            .xp-title { font-size: 28px; }
+            .xp-body { padding: 24px 16px 60px; }
+            .xp-grid { grid-template-columns: 1fr; gap: 16px; }
+            .xp-results-head { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body class="public-page">
+
+<div th:replace="~{fragments/public-navbar :: navbar}"></div>
+
+<section class="xp-hero">
+    <div class="xp-hero-inner">
+        <p class="xp-eyebrow">Browse Listings</p>
+        <h1 class="xp-title">Find your next space in Bangladesh</h1>
+        <p class="xp-sub">
+            Every listing is reviewed before it goes live. Filter by city, category, budget, size and more.
+        </p>
+    </div>
+</section>
+
+<section class="xp-body">
+    <div class="xp-layout">
+
+        <aside class="xp-sidebar">
+            <div class="xp-sidebar-head">
+                <h3>Filters</h3>
+                <a th:href="@{/explore}" class="xp-reset-link">Reset all</a>
+            </div>
+
+            <form method="get" th:action="@{/explore}" id="expForm">
+
+                <div class="xp-field">
+                    <label for="q" class="xp-field-label">Keyword</label>
+                    <input type="text" id="q" name="q" class="xp-input"
+                           placeholder="Title, area or description"
+                           th:value="${filter.q}">
+                </div>
+
+                <div class="xp-field">
+                    <label for="city" class="xp-field-label">City</label>
+                    <select id="city" name="city" class="xp-select">
+                        <option value="">Any city</option>
+                        <option th:each="c : ${cities}"
+                                th:value="${c}"
+                                th:text="${c}"
+                                th:selected="${filter.city != null and filter.city == c}">City</option>
+                    </select>
+                </div>
+
+                <div class="xp-field">
+                    <label for="category" class="xp-field-label">Category</label>
+                    <select id="category" name="category" class="xp-select">
+                        <option value="">Any category</option>
+                        <option th:each="c : ${categories}"
+                                th:value="${c.name()}"
+                                th:text="${c.label}"
+                                th:selected="${filter.category != null and filter.category == c}">Category</option>
+                    </select>
+                </div>
+
+                <div class="xp-field">
+                    <label class="xp-field-label">
+                        <span>Monthly rent</span>
+                    </label>
+                    <div class="xp-range-container">
+                        <div class="xp-range-track"></div>
+                        <div class="xp-range-fill" id="rangeFill"></div>
+                        <input type="range" id="minRentSlider" name="minRent"
+                               min="0" max="500000" step="1000"
+                               th:value="${filter.minRent != null ? filter.minRent.intValue() : 0}">
+                        <input type="range" id="maxRentSlider" name="maxRent"
+                               min="0" max="500000" step="1000"
+                               th:value="${filter.maxRent != null ? filter.maxRent.intValue() : 500000}">
+                    </div>
+                    <div class="xp-range-values">
+                        <span id="minRentLabel">৳ 0</span>
+                        <span id="maxRentLabel">৳ 5,00,000</span>
+                    </div>
+                </div>
+
+                <div class="xp-field">
+                    <label class="xp-field-label">Bedrooms</label>
+                    <div class="xp-chips">
+                        <button type="button" class="xp-chip" data-value="">Any</button>
+                        <button type="button" class="xp-chip" data-value="1">1+</button>
+                        <button type="button" class="xp-chip" data-value="2">2+</button>
+                        <button type="button" class="xp-chip" data-value="3">3+</button>
+                        <button type="button" class="xp-chip" data-value="4">4+</button>
+                    </div>
+                    <input type="hidden" name="minBedrooms" id="minBedroomsInput"
+                           th:value="${filter.minBedrooms}">
+                </div>
+
+                <div class="xp-field">
+                    <label for="minSize" class="xp-field-label">Minimum size (sqft)</label>
+                    <input type="number" id="minSize" name="minSize" class="xp-input"
+                           min="0" step="100" placeholder="e.g. 800"
+                           th:value="${filter.minSize}">
+                </div>
+
+                <input type="hidden" name="sort" id="sortHidden"
+                       th:value="${filter.sort != null ? filter.sort : 'newest'}">
+
+                <div class="xp-btn-row">
+                    <button type="submit" class="xp-apply">Apply Filters</button>
+                </div>
+            </form>
+        </aside>
+
+        <div class="xp-results">
+            <div class="xp-results-head">
+                <p class="xp-count">
+                    <strong th:text="${resultCount}">0</strong>
+                    <span th:text="${resultCount == 1 ? 'space' : 'spaces'}">spaces</span> found
+                    <span class="xp-count-tag" th:if="${hasFilters}">Filtered</span>
+                </p>
+
+                <div class="xp-sort">
+                    <span class="xp-sort-label">Sort by</span>
+                    <select id="sortSelect">
+                        <option value="newest" th:selected="${filter.sort == null or filter.sort == 'newest'}">Newest first</option>
+                        <option value="price-low" th:selected="${filter.sort == 'price-low'}">Price: low to high</option>
+                        <option value="price-high" th:selected="${filter.sort == 'price-high'}">Price: high to low</option>
+                        <option value="size-high" th:selected="${filter.sort == 'size-high'}">Largest first</option>
+                    </select>
+                </div>
+            </div>
+
+            <div th:if="${listings.isEmpty()}" class="xp-empty">
+                <p class="xp-empty-icon">&#9906;</p>
+                <h3>No matches found</h3>
+                <p>Try relaxing your filters or exploring a different city.</p>
+                <a th:href="@{/explore}" class="xp-empty-btn">Clear all filters</a>
+            </div>
+
+            <div th:if="${!listings.isEmpty()}" class="xp-grid">
+                <a th:each="p : ${listings}"
+                   th:href="@{/listing/{id}(id=${p.id})}"
+                   class="xp-card">
+
+                    <div class="xp-card-img">
+                        <img th:if="${p.primaryPhoto != null}"
+                             th:src="@{'/uploads/' + ${p.primaryPhoto}}"
+                             alt="Listing photo">
+                        <div th:if="${p.primaryPhoto == null}" class="xp-card-img-ph">
+                            <span>No photo</span>
+                        </div>
+                        <span class="xp-card-cat" th:text="${p.category.label}">Category</span>
+                        <span class="xp-card-price">
+                            <strong th:text="'৳ ' + ${#numbers.formatDecimal(p.monthlyRent, 1, 'COMMA', 0, 'POINT')}">৳ 0</strong>
+                            <small>/mo</small>
+                        </span>
+                    </div>
+
+                    <div class="xp-card-body">
+                        <h3 class="xp-card-title" th:text="${p.title}">Title</h3>
+                        <p class="xp-card-loc">
+                            <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <span th:text="${p.area + ', ' + p.city}">Location</span>
+                        </p>
+
+                        <div class="xp-card-meta">
+                            <div class="xp-card-meta-item" th:if="${p.bedrooms != null}">
+                                <span class="xp-card-meta-value" th:text="${p.bedrooms}">0</span>
+                                <span class="xp-card-meta-label">Beds</span>
+                            </div>
+                            <div class="xp-card-meta-item" th:if="${p.bathrooms != null}">
+                                <span class="xp-card-meta-value" th:text="${p.bathrooms}">0</span>
+                                <span class="xp-card-meta-label">Baths</span>
+                            </div>
+                            <div class="xp-card-meta-item" th:if="${p.sizeSqft != null}">
+                                <span class="xp-card-meta-value"
+                                      th:text="${#numbers.formatDecimal(p.sizeSqft, 1, 'COMMA', 0, 'POINT')}">0</span>
+                                <span class="xp-card-meta-label">Sqft</span>
+                            </div>
+                            <div class="xp-card-meta-item" th:if="${p.bedrooms == null and p.bathrooms == null and p.sizeSqft == null}">
+                                <span class="xp-card-meta-value">&mdash;</span>
+                                <span class="xp-card-meta-label">Details</span>
+                            </div>
+                        </div>
+
+                        <div class="xp-card-foot">
+                            <span class="xp-card-type" th:text="${p.propertyType.label}">Type</span>
+                            <span class="xp-card-cta">
+                                View
+                                <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div th:replace="~{fragments/public-footer :: footer}"></div>
+
+<script>
+    (function () {
+        var MIN = 0;
+        var MAX = 500000;
+        var GAP = 1000;
+
+        var minSlider = document.getElementById('minRentSlider');
+        var maxSlider = document.getElementById('maxRentSlider');
+        var fill = document.getElementById('rangeFill');
+        var minLabel = document.getElementById('minRentLabel');
+        var maxLabel = document.getElementById('maxRentLabel');
+
+        function fmt(v) {
+            return '৳ ' + parseInt(v, 10).toLocaleString('en-IN');
+        }
+
+        function updateRange() {
+            var minVal = parseInt(minSlider.value, 10);
+            var maxVal = parseInt(maxSlider.value, 10);
+
+            if (minVal > maxVal - GAP) {
+                minVal = maxVal - GAP;
+                minSlider.value = minVal;
+            }
+            if (maxVal < minVal + GAP) {
+                maxVal = minVal + GAP;
+                maxSlider.value = maxVal;
+            }
+
+            var minPct = (minVal / MAX) * 100;
+            var maxPct = (maxVal / MAX) * 100;
+
+            fill.style.left = minPct + '%';
+            fill.style.width = (maxPct - minPct) + '%';
+
+            minLabel.textContent = fmt(minVal);
+            maxLabel.textContent = fmt(maxVal);
+        }
+
+        if (minSlider && maxSlider && fill) {
+            updateRange();
+            minSlider.addEventListener('input', updateRange);
+            maxSlider.addEventListener('input', updateRange);
+        }
+
+        var minBedroomsInput = document.getElementById('minBedroomsInput');
+        var bedroomChips = document.querySelectorAll('.xp-chip');
+
+        function paintChips() {
+            var current = minBedroomsInput.value || '';
+            bedroomChips.forEach(function (chip) {
+                chip.classList.toggle('is-active', chip.dataset.value === current);
+            });
+        }
+
+        bedroomChips.forEach(function (chip) {
+            chip.addEventListener('click', function () {
+                var v = chip.dataset.value;
+                if (minBedroomsInput.value === v) {
+                    minBedroomsInput.value = '';
+                } else {
+                    minBedroomsInput.value = v;
+                }
+                paintChips();
+            });
+        });
+        paintChips();
+
+        var sortSelect = document.getElementById('sortSelect');
+        var sortHidden = document.getElementById('sortHidden');
+        var form = document.getElementById('expForm');
+
+        if (sortSelect && sortHidden && form) {
+            sortSelect.addEventListener('change', function () {
+                sortHidden.value = sortSelect.value;
+                form.submit();
+            });
+        }
+    })();
+</script>
+
+</body>
+</html>
