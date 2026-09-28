@@ -1,0 +1,75 @@
+.login-card {
+    max-width: 460px;
+}
+
+.role-toggle {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: #F0F1F4;
+    border-radius: 999px;
+    padding: 4px;
+    margin-bottom: 26px;
+}
+
+.role-toggle input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.role-toggle label {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 10px 0;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    transition: color 0.25s ease;
+}
+
+.role-toggle input:checked + label {
+    color: var(--navy-text);
+}
+
+.toggle-thumb {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: calc(50% - 4px);
+    height: calc(100% - 8px);
+    background: var(--surface);
+    border-radius: 999px;
+    box-shadow: 0 2px 8px rgba(8, 17, 31, 0.12);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+}
+
+.role-toggle:has(#loginAsOwner:checked) .toggle-thumb {
+    transform: translateX(100%);
+}
+
+.password-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.password-label-row label {
+    margin-bottom: 0;
+}
+
+.forgot-link {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gold);
+    text-decoration: none;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Admin - RentHubBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/listing.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div class="dashboard-layout">
+    <div th:replace="~{fragments/admin-sidebar :: sidebar('register-admin', ${adminRole})}"></div>
+    <main class="dashboard-main">
+        <div class="dashboard-topbar">
+            <h1>Register a new admin</h1>
+            <p class="subtitle">Only superadmins can create accounts. Every admin shares the platform email.</p>
+        </div>
+
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
+        <form th:action="@{/admin/admins/register}" th:object="${form}" method="post" class="listing-form">
+            <section class="form-section">
+                <div class="section-head">
+                    <h2>Account details</h2>
+                    <p>Username must be unique across all admin accounts.</p>
+                </div>
+
+                <div class="field">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" th:field="*{username}" required autofocus>
+                </div>
+
+                <div class="field">
+                    <label>Contact email</label>
+                    <input type="text" th:value="${sharedEmail}" disabled
+                           style="background:#F4F5F7; color: var(--muted);">
+                    <p class="hint">All admins use the same email. This is the sender for every notification sent to users.</p>
+                </div>
+
+                <div class="field">
+                    <label for="role">Role</label>
+                    <select id="role" th:field="*{role}" required>
+                        <option value="">Select role</option>
+                        <option th:each="r : ${T(com.aoop.renthubbd.model.AdminRole).values()}"
+                                th:value="${r}" th:text="${r.label}"></option>
+                    </select>
+                </div>
+
+                <div class="row-2">
+                    <div class="field">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" th:field="*{password}" required>
+                    </div>
+                    <div class="field">
+                        <label for="confirmPassword">Confirm password</label>
+                        <input type="password" id="confirmPassword" th:field="*{confirmPassword}" required>
+                    </div>
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <a th:href="@{/admin/admins}" class="btn-ghost">Cancel</a>
+                <button type="submit" class="submit-btn inline">Create Admin</button>
+            </div>
+        </form>
+    </main>
+</div>
+</body>
+</html>

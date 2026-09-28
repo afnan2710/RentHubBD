@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - RentHub BD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+<body class="public-page">
+
+<div th:replace="~{fragments/public-navbar :: navbar}"></div>
+
+<section class="about-hero">
+    <div class="about-hero-inner">
+        <p class="hero-eyebrow">Our Story</p>
+        <h1 class="about-hero-title">
+            We're rebuilding how Bangladesh<br>
+            <span class="hero-accent">discovers and rents space.</span>
+        </h1>
+        <p class="about-hero-subtitle">
+            RentHub BD was born out of a simple frustration — finding a decent place to rent in Dhaka
+            shouldn't require scrolling through hundreds of Facebook posts, chasing unreliable brokers,
+            or driving around looking for To-Let signs. We built the platform we wished existed.
+        </p>
+    </div>
+</section>
+
+<section class="vision-mission">
+    <div class="vm-grid">
+        <div class="vm-card">
+            <div class="vm-icon">&#9678;</div>
+            <p class="vm-eyebrow">Our Vision</p>
+            <h2>To become the default way Bangladesh rents.</h2>
+            <p>
+                A country where every renter — whether a student in Mirpur or a multinational opening a
+                Gulshan office — finds their next space through a single trusted platform. Where property
+                listings are structured, verified and priced honestly. Where the friction, waste and
+                middlemen of today's rental market are simply gone.
+            </p>
+        </div>
+
+        <div class="vm-card">
+            <div class="vm-icon">&#9873;</div>
+            <p class="vm-eyebrow">Our Mission</p>
+            <h2>Make every rentable space discoverable, comparable and verifiable.</h2>
+            <p>
+                We do this by giving owners a structured way to publish accurate listings, giving renters
+                powerful filters to find exactly what fits, and giving administrators the tools to keep the
+                marketplace clean. No noise. No hidden fees. No wasted site visits. Just a marketplace
+                that respects everyone's time.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="values">
+    <div class="section-header">
+        <p class="section-eyebrow">What we stand for</p>
+        <h2 class="section-title">Four principles, every decision</h2>
+        <p class="section-subtitle">
+            These aren't posters on a wall — they're the filters every feature goes through before it ships.
+        </p>
+    </div>
+
+    <div class="values-grid">
+        <div class="value-card">
+            <span class="value-number">01</span>
+            <h3>Transparency</h3>
+            <p>
+                Rent plus service charge, parking and utilities shown as one total. What you see is what
+                you'll actually pay. No asterisks, no surprises at signing.
+            </p>
+        </div>
+
+        <div class="value-card">
+            <span class="value-number">02</span>
+            <h3>Verification</h3>
+            <p>
+                Every listing passes through human review before going live. Suspicious accounts get
+                deactivated. Reports get investigated. Quality is a feature, not a suggestion.
+            </p>
+        </div>
+
+        <div class="value-card">
+            <span class="value-number">03</span>
+            <h3>Simplicity</h3>
+            <p>
+                Search by what actually matters — location, size, budget, facilities. Not fifteen
+                dropdowns designed to hide the real options.
+            </p>
+        </div>
+
+        <div class="value-card">
+            <span class="value-number">04</span>
+            <h3>Local first</h3>
+            <p>
+                Built in Dhaka for Bangladesh. Every category, filter and city name reflects how renting
+                actually works here — from bachelor messes to Banani showrooms.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="journey">
+    <div class="section-header">
+        <p class="section-eyebrow">The path ahead</p>
+        <h2 class="section-title">Where we're going</h2>
+    </div>
+
+    <div class="timeline">
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <p class="timeline-date">Now</p>
+                <h3>The marketplace</h3>
+                <p>
+                    Listings across residential, commercial, industrial and other spaces. Verified owners.
+                    Structured search. Direct messaging. Admin moderation. This is what's live today.
+                </p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <p class="timeline-date">Next</p>
+                <h3>Trust at scale</h3>
+                <p>
+                    Identity verification for owners, verified reviews, transparent visit scheduling
+                    and a public dispute resolution flow. Trust compounds — we're investing in it early.
+                </p>
+            </div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+                <p class="timeline-date">Ahead</p>
+                <h3>Beyond Dhaka</h3>
+                <p>
+                    Chattogram, Sylhet, Khulna, Rajshahi. Every major city where the same problems —
+                    fragmented listings, unreliable middlemen — deserve the same clean solution.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="promise">
+    <div class="promise-inner">
+        <p class="section-eyebrow">Our promise</p>
+        <h2 class="promise-title">To renters and owners alike</h2>
+        <p class="promise-text">
+            We will never sell your data. We will never let a pay-to-win listing outrank a better one.
+            We will never grow so fast that quality slips. Every feature we build will pass a simple test —
+            does it save renters time or owners money? If the answer is no, it doesn't ship.
+        </p>
+    </div>
+</section>
+
+<section class="about-cta">
+    <div class="about-cta-inner">
+        <h2>Ready to find your next space?</h2>
+        <p>Join thousands of renters and owners already using RentHub BD.</p>
+        <div class="hero-actions">
+            <a th:href="@{/register}" class="hero-btn-primary">Create Free Account &rarr;</a>
+            <a th:href="@{/home}" class="hero-btn-secondary">Back to Home</a>
+        </div>
+    </div>
+</section>
+
+<div th:replace="~{fragments/public-footer :: footer}"></div>
+
+</body>
+</html>

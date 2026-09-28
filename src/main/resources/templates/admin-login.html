@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - RentHubBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div class="page">
+    <div class="horizon-glow" aria-hidden="true"></div>
+    <div class="card login-card admin-login-card">
+        <div class="card-header">
+            <p class="eyebrow">RentHub BD &middot; Admin</p>
+            <h1>Administrator sign in</h1>
+            <p class="subtitle">Restricted access. All activity is logged.</p>
+        </div>
+
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${param.sessionEnded}" class="alert alert-error">
+            Your session was ended because your account was deactivated.
+        </div>
+
+        <form th:action="@{/admin/login}" method="post" novalidate>
+            <div class="field">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required autofocus>
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="submit-btn">Sign In</button>
+            <p class="login-link"><a th:href="@{/login}">Back to main login</a></p>
+        </form>
+    </div>
+</div>
+</body>
+</html>

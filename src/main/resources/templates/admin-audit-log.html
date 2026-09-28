@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Log - RentHubBD Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/listing.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div class="dashboard-layout">
+    <div th:replace="~{fragments/admin-sidebar :: sidebar('audit', ${adminRole})}"></div>
+    <main class="dashboard-main">
+
+        <div class="dashboard-topbar page-head">
+            <div>
+                <h1>Admin activity log</h1>
+                <p class="subtitle">Every admin action, with who did it and when.</p>
+            </div>
+            <a th:href="@{/admin/audit-log/export}" class="btn-primary">Export Log</a>
+        </div>
+
+        <div class="stat-grid">
+            <div class="stat-card">
+                <p class="stat-label">Total entries</p>
+                <p class="stat-value" th:text="${totalReceived}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Written to disk</p>
+                <p class="stat-value" th:text="${totalWritten}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Today</p>
+                <p class="stat-value" th:text="${countToday}">0</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-label">Last hour</p>
+                <p class="stat-value" th:text="${countLastHour}">0</p>
+            </div>
+        </div>
+
+        <div class="admin-split">
+            <div class="panel admin-split-left">
+                <h2 class="panel-title">Per-admin activity</h2>
+                <p class="hint">Total actions performed by each admin.</p>
+                <div th:if="${byActor.isEmpty()}" class="hint">No activity yet.</div>
+                <ul class="bar-list" th:if="${!byActor.isEmpty()}">
+                    <li th:each="entry : ${byActor}">
+                        <span class="bar-label" th:text="${entry.key}">admin</span>
+                        <span class="bar-count" th:text="${entry.value}">0</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="panel admin-split-right">
+                <h2 class="panel-title">By action type</h2>
+                <p class="hint">Which kinds of actions happen most.</p>
+                <div th:if="${byAction.isEmpty()}" class="hint">No activity yet.</div>
+                <ul class="bar-list" th:if="${!byAction.isEmpty()}">
+                    <li th:each="entry : ${byAction}">
+                        <span class="bar-label" th:text="${entry.key.label}">Action</span>
+                        <span class="bar-count" th:text="${entry.value}">0</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="panel filter-bar">
+            <form method="get" th:action="@{/admin/audit-log}" class="filter-form">
+                <div class="filter-field">
+                    <label for="admin">Admin</label>
+                    <select id="admin" name="admin">
+                        <option value="">All admins</option>
+                        <option th:each="a : ${actors}"
+                                th:value="${a}"
+                                th:text="${a}"
+                                th:selected="${filterAdmin != null and filterAdmin == a}"></option>
+                    </select>
+                </div>
+
+                <div class="filter-field">
+                    <label for="action">Action</label>
+                    <select id="action" name="action">
+                        <option value="">All actions</option>
+                        <option th:each="act : ${actions}"
+                                th:value="${act}"
+                                th:text="${act.label}"
+                                th:selected="${filterAction != null and filterAction == act}"></option>
+                    </select>
+                </div>
+
+                <div class="filter-field">
+                    <label for="keyword">Keyword</label>
+                    <input type="text" id="keyword" name="keyword" placeholder="Search detail"
+                           th:value="${filterKeyword}">
+                </div>
+
+                <div class="filter-actions">
+                    <button type="submit" class="submit-btn inline">Apply</button>
+                    <a th:href="@{/admin/audit-log}" class="btn-ghost">Clear</a>
+                </div>
+            </form>
+        </div>
+
+        <div th:if="${entries.isEmpty()}" class="panel">
+            <span class="coming-soon-badge">Nothing to show</span>
+            <h2>No matching activity</h2>
+            <p>Try adjusting the filters above.</p>
+        </div>
+
+        <div th:if="${!entries.isEmpty()}" class="listing-table-wrap">
+            <table class="listing-table">
+                <thead>
+                <tr>
+                    <th>When</th>
+                    <th>Admin</th>
+                    <th>Action</th>
+                    <th>Detail</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="e : ${entries}">
+                    <td th:text="${#temporals.format(e.timestamp, 'yyyy-MM-dd HH:mm:ss')}">time</td>
+                    <td class="cell-title" th:text="${e.actor}">actor</td>
+                    <td>
+                        <span class="chip action-chip"
+                              th:classappend="'action-' + ${e.action != null ? #strings.toLowerCase(e.action.name()) : 'unknown'}"
+                              th:text="${e.actionLabel}">Action</span>
+                    </td>
+                    <td th:text="${e.detail}">detail</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+</div>
+</body>
+</html>

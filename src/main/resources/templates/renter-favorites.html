@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Spaces - RentHubBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/listing.css}">
+    <link rel="stylesheet" th:href="@{/css/explore.css}">
+</head>
+<body>
+<div class="dashboard-layout">
+    <div th:replace="~{fragments/renter-sidebar :: sidebar('favorites')}"></div>
+    <main class="dashboard-main">
+
+        <div class="dashboard-topbar">
+            <h1>Saved spaces</h1>
+            <p class="subtitle">Listings you've bookmarked for later.</p>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
+        <div th:if="${favorites.isEmpty()}" class="panel">
+            <h3>Nothing saved yet</h3>
+            <p>Browse the <a th:href="@{/explore}" class="btn-link">Explore page</a> and save listings that catch your eye.</p>
+        </div>
+
+        <div th:if="${!favorites.isEmpty()}" class="listing-grid-dash">
+            <div th:each="f : ${favorites}" class="listing-card">
+                <a th:href="@{/listing/{id}(id=${f.property.id})}" class="listing-image">
+                    <img th:if="${f.property.primaryPhoto != null}"
+                         th:src="@{'/uploads/' + ${f.property.primaryPhoto}}" alt="Photo">
+                    <div th:if="${f.property.primaryPhoto == null}" class="listing-image-placeholder">
+                        <span>No photo</span>
+                    </div>
+                </a>
+                <div class="listing-body">
+                    <a th:href="@{/listing/{id}(id=${f.property.id})}" class="listing-title"
+                       th:text="${f.property.title}">Title</a>
+                    <p class="listing-location" th:text="${f.property.area + ', ' + f.property.city}">Location</p>
+                    <p class="cell-amount"
+                       th:text="'৳ ' + ${#numbers.formatDecimal(f.property.monthlyRent, 1, 'COMMA', 0, 'POINT')} + '/mo'">৳ 0</p>
+                    <form th:action="@{/renter/favorites/{id}/remove(id=${f.property.id})}" method="post">
+                        <button type="submit" class="btn-small">Remove</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+</body>
+</html>

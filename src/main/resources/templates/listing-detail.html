@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${property.title} + ' - RentHub BD'">Listing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/explore.css}">
+</head>
+<body class="public-page">
+
+<div th:replace="~{fragments/public-navbar :: navbar}"></div>
+
+<div class="detail-wrap">
+
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}"   class="alert alert-error"   th:text="${error}"></div>
+
+    <div class="detail-header">
+        <div>
+            <p class="eyebrow" th:text="${property.category.label}">Category</p>
+            <h1 class="detail-main-title" th:text="${property.title}">Title</h1>
+            <p class="detail-location">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span th:text="${property.address + ', ' + property.area + ', ' + property.city}">Location</span>
+            </p>
+            <div class="detail-tags">
+                <span class="chip" th:text="${property.propertyType.label}">Type</span>
+                <span class="chip" th:if="${property.sizeSqft != null}"
+                      th:text="${#numbers.formatDecimal(property.sizeSqft, 1, 'COMMA', 0, 'POINT')} + ' sqft'">size</span>
+                <span class="chip" th:if="${property.bedrooms != null}" th:text="${property.bedrooms} + ' bed'">bed</span>
+                <span class="chip" th:if="${property.bathrooms != null}" th:text="${property.bathrooms} + ' bath'">bath</span>
+                <span class="chip chip-rating" th:if="${reviewCount > 0}">
+                    &#9733; <span th:text="${#numbers.formatDecimal(avgRating, 1, 1)}">0.0</span>
+                    (<span th:text="${reviewCount}">0</span>)
+                </span>
+            </div>
+        </div>
+
+        <div class="detail-price-box">
+            <p class="detail-price-label">Monthly rent</p>
+            <p class="detail-price"
+               th:text="'৳ ' + ${#numbers.formatDecimal(property.monthlyRent, 1, 'COMMA', 0, 'POINT')}">৳ 0</p>
+            <p class="detail-price-sub">Total cost: ৳ <span
+                    th:text="${#numbers.formatDecimal(property.totalMonthlyCost, 1, 'COMMA', 0, 'POINT')}">0</span></p>
+        </div>
+    </div>
+
+    <div class="detail-gallery" th:if="${property.photos != null and !property.photos.isEmpty()}">
+        <div class="gallery-main">
+            <img th:src="@{'/uploads/' + ${property.photos[0]}}" alt="Main photo">
+        </div>
+        <div class="gallery-thumbs" th:if="${property.photos.size() > 1}">
+            <div class="gallery-thumb" th:each="photo, it : ${property.photos}"
+                 th:if="${it.index > 0}">
+                <img th:src="@{'/uploads/' + ${photo}}" alt="Photo">
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-layout">
+        <div class="detail-main">
+
+            <section class="detail-block">
+                <h2>Overview</h2>
+                <div class="spec-grid">
+                    <div class="spec">
+                        <p class="spec-label">Category</p>
+                        <p class="spec-value" th:text="${property.category.label}">—</p>
+                    </div>
+                    <div class="spec">
+                        <p class="spec-label">Type</p>
+                        <p class="spec-value" th:text="${property.propertyType.label}">—</p>
+                    </div>
+                    <div class="spec">
+                        <p class="spec-label">Size</p>
+                        <p class="spec-value" th:text="${property.sizeSqft != null ? #numbers.formatDecimal(property.sizeSqft, 1, 'COMMA', 0, 'POINT') + ' sqft' : '—'}">—</p>
+                    </div>
+                    <div class="spec">
+                        <p class="spec-label">Bedrooms</p>
+                        <p class="spec-value" th:text="${property.bedrooms != null ? property.bedrooms : '—'}">—</p>
+                    </div>
+                    <div class="spec">
+                        <p class="spec-label">Bathrooms</p>
+                        <p class="spec-value" th:text="${property.bathrooms != null ? property.bathrooms : '—'}">—</p>
+                    </div>
+                    <div class="spec">
+                        <p class="spec-label">Floor</p>
+                        <p class="spec-value" th:text="${property.floorNumber != null ? property.floorNumber : '—'}">—</p>
+                    </div>
+                    <div class="spec">
+                        <p class="spec-label">Available from</p>
+                        <p class="spec-value" th:text="${property.availableFrom != null ? #temporals.format(property.availableFrom, 'dd MMM yyyy') : '—'}">—</p>
+                    </div>
+                    <div class="spec">
+                        <p class="spec-label">Advance</p>
+                        <p class="spec-value" th:text="${property.advanceMonths != null ? property.advanceMonths + ' months' : '—'}">—</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="detail-block" th:if="${property.description != null and !property.description.isBlank()}">
+                <h2>About this space</h2>
+                <p class="detail-description" th:text="${property.description}">Description</p>
+            </section>
+
+            <section class="detail-block" th:if="${property.facilities != null and !property.facilities.isEmpty()}">
+                <h2>Facilities</h2>
+                <div class="facility-chips">
+                    <span class="chip facility-chip" th:each="f : ${property.facilities}" th:text="${f}">Facility</span>
+                </div>
+            </section>
+
+            <section class="detail-block">
+                <h2>Pricing breakdown</h2>
+                <div class="price-breakdown">
+                    <div class="price-row">
+                        <span>Monthly rent</span>
+                        <span th:text="'৳ ' + ${#numbers.formatDecimal(property.monthlyRent, 1, 'COMMA', 0, 'POINT')}">৳ 0</span>
+                    </div>
+                    <div class="price-row" th:if="${property.serviceCharge != null}">
+                        <span>Service charge</span>
+                        <span th:text="'৳ ' + ${#numbers.formatDecimal(property.serviceCharge, 1, 'COMMA', 0, 'POINT')}">৳ 0</span>
+                    </div>
+                    <div class="price-row" th:if="${property.parkingFee != null}">
+                        <span>Parking fee</span>
+                        <span th:text="'৳ ' + ${#numbers.formatDecimal(property.parkingFee, 1, 'COMMA', 0, 'POINT')}">৳ 0</span>
+                    </div>
+                    <div class="price-row" th:if="${property.utilityEstimate != null}">
+                        <span>Estimated utilities</span>
+                        <span th:text="'৳ ' + ${#numbers.formatDecimal(property.utilityEstimate, 1, 'COMMA', 0, 'POINT')}">৳ 0</span>
+                    </div>
+                    <div class="price-row price-row-total">
+                        <span>Total monthly cost</span>
+                        <span th:text="'৳ ' + ${#numbers.formatDecimal(property.totalMonthlyCost, 1, 'COMMA', 0, 'POINT')}">৳ 0</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="detail-block" id="reviews">
+                <div class="reviews-header">
+                    <h2>Reviews <span class="review-count" th:if="${reviewCount > 0}" th:text="'(' + ${reviewCount} + ')'">(0)</span></h2>
+                    <div class="avg-rating" th:if="${reviewCount > 0}">
+                        <span class="avg-rating-number" th:text="${#numbers.formatDecimal(avgRating, 1, 1)}">0.0</span>
+                        <span class="avg-rating-stars">
+                            <span th:each="i : ${#numbers.sequence(1, 5)}"
+                                  th:classappend="${i <= avgRating} ? 'filled' : ''">&#9733;</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div th:if="${reviews.isEmpty()}" class="reviews-empty">
+                    <p>No reviews yet. Be the first to share your experience.</p>
+                </div>
+
+                <div class="review-list">
+                    <article class="review-item" th:each="r : ${reviews}">
+                        <div class="review-avatar"
+                             th:text="${#strings.substring(r.reviewer.firstName, 0, 1).toUpperCase()}">U</div>
+                        <div class="review-body">
+                            <div class="review-head">
+                                <div>
+                                    <p class="review-author"
+                                       th:text="${r.reviewer.firstName + ' ' + r.reviewer.lastName}">Name</p>
+                                    <p class="review-date"
+                                       th:text="${#temporals.format(r.createdAt, 'dd MMM yyyy')}">date</p>
+                                </div>
+                                <div class="review-stars">
+                                    <span th:each="i : ${#numbers.sequence(1, 5)}"
+                                          th:classappend="${i <= r.rating} ? 'filled' : ''">&#9733;</span>
+                                </div>
+                            </div>
+                            <h4 class="review-title" th:if="${r.title != null}" th:text="${r.title}">Title</h4>
+                            <p class="review-text" th:if="${r.comment != null}" th:text="${r.comment}">Comment</p>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="review-form-block"
+                     th:if="${navLoggedIn and !isOwnerOfListing and !hasReviewed}">
+                    <h3>Write a review</h3>
+                    <form th:action="@{'/listing/' + ${property.id} + '/review'}" method="post">
+                        <div class="field">
+                            <label for="rating">Your rating</label>
+                            <select id="rating" name="rating" required>
+                                <option value="">Choose a rating</option>
+                                <option value="5">5 — Excellent</option>
+                                <option value="4">4 — Very good</option>
+                                <option value="3">3 — Average</option>
+                                <option value="2">2 — Below average</option>
+                                <option value="1">1 — Poor</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="reviewTitle">Title (optional)</label>
+                            <input type="text" id="reviewTitle" name="title" maxlength="200">
+                        </div>
+                        <div class="field">
+                            <label for="comment">Your review</label>
+                            <textarea id="comment" name="comment" rows="4" maxlength="2000"
+                                      placeholder="What stood out? Layout, surroundings, safety, value for money..."></textarea>
+                        </div>
+                        <button type="submit" class="hero-btn-primary" style="border:none; cursor:pointer;">Post Review</button>
+                    </form>
+                </div>
+
+                <div class="review-form-block"
+                     th:if="${navLoggedIn and isOwnerOfListing}">
+                    <p class="hint">You own this listing, so you can't review it.</p>
+                </div>
+
+                <div class="review-form-block" th:if="${!navLoggedIn}">
+                    <p class="hint">
+                        <a th:href="@{/login}" class="btn-link">Log in</a> to write a review.
+                    </p>
+                </div>
+
+                <div class="review-form-block" th:if="${navLoggedIn and hasReviewed}">
+                    <p class="hint">You have already reviewed this listing.</p>
+                </div>
+            </section>
+        </div>
+
+        <aside class="detail-sidebar">
+
+            <div class="sidebar-card owner-card">
+                <h3 class="sidebar-card-title">Listed by</h3>
+                <div class="owner-row">
+                    <div class="owner-avatar">
+                        <img th:if="${property.owner.profilePhoto != null}"
+                             th:src="@{'/uploads/profile-photos/' + ${property.owner.profilePhoto}}"
+                             alt="Owner">
+                        <span th:if="${property.owner.profilePhoto == null}"
+                              th:text="${#strings.substring(property.owner.firstName, 0, 1).toUpperCase()}">O</span>
+                    </div>
+                    <div>
+                        <p class="owner-name"
+                           th:text="${property.owner.firstName + ' ' + property.owner.lastName}">Owner</p>
+                        <p class="owner-since">Verified owner</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <h3 class="sidebar-card-title">Request a visit</h3>
+
+                <div th:if="${!navLoggedIn}" class="sidebar-cta">
+                    <p class="sidebar-note">Log in as a renter to request a visit.</p>
+                    <a th:href="@{/login}" class="hero-btn-primary" style="display:block; text-align:center;">Log in</a>
+                </div>
+
+                <div th:if="${navLoggedIn and isOwnerOfListing}" class="sidebar-cta">
+                    <p class="sidebar-note">This is your own listing.</p>
+                </div>
+
+                <form th:if="${navLoggedIn and !isOwnerOfListing}"
+                      th:action="@{'/listing/' + ${property.id} + '/request-visit'}"
+                      method="post" class="visit-form">
+                    <div class="field">
+                        <label for="requestedDate">Preferred date</label>
+                        <input type="date" id="requestedDate" name="requestedDate" required>
+                    </div>
+                    <div class="field">
+                        <label for="requestedTime">Preferred time</label>
+                        <select id="requestedTime" name="requestedTime" required>
+                            <option value="">Select time</option>
+                            <option value="Morning">Morning (9 AM – 12 PM)</option>
+                            <option value="Afternoon">Afternoon (12 PM – 4 PM)</option>
+                            <option value="Evening">Evening (4 PM – 7 PM)</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="message">Message to owner (optional)</label>
+                        <textarea id="message" name="message" rows="3" maxlength="1000"
+                                  placeholder="Introduce yourself, or mention anything specific."></textarea>
+                    </div>
+                    <button type="submit" class="hero-btn-primary full-width" style="border:none; cursor:pointer;">
+                        Send Visit Request
+                    </button>
+                </form>
+            </div>
+
+            <div class="sidebar-card" th:if="${navLoggedIn and !isOwnerOfListing}">
+                <h3 class="sidebar-card-title">Actions</h3>
+
+                <form th:action="@{'/listing/' + ${property.id} + '/message'}" method="post">
+                    <button type="submit" class="action-btn-full">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-4-1L3 20l1-4.5A8.5 8.5 0 1 1 21 11.5z"/></svg>
+                        Message owner
+                    </button>
+                </form>
+
+                <form th:action="@{'/listing/' + ${property.id} + '/favorite'}" method="post">
+                    <input type="hidden" name="from" th:value="'/listing/' + ${property.id}">
+                    <button type="submit" class="action-btn-full">
+                        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1.1 1L12 21.2l7.7-7.8 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+                        <span th:text="${isFavorited} ? 'Saved to favorites' : 'Save to favorites'">Save</span>
+                    </button>
+                </form>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<div th:replace="~{fragments/public-footer :: footer}"></div>
+
+</body>
+</html>

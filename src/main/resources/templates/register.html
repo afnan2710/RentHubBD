@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - RentHubBD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+</head>
+<body>
+<div class="page">
+
+    <div class="horizon-glow" aria-hidden="true"></div>
+    <div class="skyline" aria-hidden="true">
+        <svg viewBox="0 0 1440 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <rect class="bld" x="0" y="130" width="65" height="90"/>
+            <rect class="bld" x="70" y="70" width="50" height="150"/>
+            <rect class="bld" x="130" y="150" width="85" height="70"/>
+            <rect class="bld" x="225" y="40" width="55" height="180"/>
+            <rect class="bld" x="290" y="100" width="70" height="120"/>
+            <rect class="bld" x="370" y="160" width="60" height="60"/>
+            <rect class="bld" x="440" y="60" width="55" height="160"/>
+            <rect class="bld" x="505" y="115" width="95" height="105"/>
+            <rect class="bld" x="610" y="30" width="48" height="190"/>
+            <rect class="bld" x="668" y="105" width="75" height="115"/>
+            <rect class="bld" x="753" y="150" width="58" height="70"/>
+            <rect class="bld" x="820" y="65" width="65" height="155"/>
+            <rect class="bld" x="895" y="120" width="90" height="100"/>
+            <rect class="bld" x="995" y="45" width="52" height="175"/>
+            <rect class="bld" x="1055" y="110" width="70" height="110"/>
+            <rect class="bld" x="1135" y="155" width="58" height="65"/>
+            <rect class="bld" x="1200" y="70" width="62" height="150"/>
+            <rect class="bld" x="1270" y="130" width="88" height="90"/>
+            <rect class="bld" x="1365" y="50" width="55" height="170"/>
+
+            <rect class="window" x="10" y="150" width="6" height="8"/>
+            <rect class="window twinkle" x="25" y="150" width="6" height="8"/>
+            <rect class="window" x="10" y="170" width="6" height="8"/>
+            <rect class="window" x="25" y="170" width="6" height="8"/>
+            <rect class="window twinkle" x="45" y="190" width="6" height="8"/>
+            <rect class="window" x="82" y="90" width="6" height="8"/>
+            <rect class="window" x="98" y="90" width="6" height="8"/>
+            <rect class="window twinkle" x="82" y="110" width="6" height="8"/>
+            <rect class="window" x="98" y="110" width="6" height="8"/>
+            <rect class="window" x="82" y="130" width="6" height="8"/>
+            <rect class="window twinkle" x="238" y="60" width="6" height="8"/>
+            <rect class="window" x="255" y="60" width="6" height="8"/>
+            <rect class="window" x="238" y="80" width="6" height="8"/>
+            <rect class="window twinkle" x="255" y="100" width="6" height="8"/>
+            <rect class="window" x="305" y="120" width="6" height="8"/>
+            <rect class="window" x="325" y="120" width="6" height="8"/>
+            <rect class="window twinkle" x="345" y="140" width="6" height="8"/>
+            <rect class="window" x="455" y="80" width="6" height="8"/>
+            <rect class="window twinkle" x="470" y="100" width="6" height="8"/>
+            <rect class="window" x="455" y="120" width="6" height="8"/>
+            <rect class="window" x="525" y="135" width="6" height="8"/>
+            <rect class="window twinkle" x="545" y="135" width="6" height="8"/>
+            <rect class="window" x="565" y="160" width="6" height="8"/>
+            <rect class="window" x="525" y="180" width="6" height="8"/>
+            <rect class="window twinkle" x="622" y="50" width="6" height="8"/>
+            <rect class="window" x="622" y="80" width="6" height="8"/>
+            <rect class="window" x="622" y="110" width="6" height="8"/>
+            <rect class="window" x="685" y="125" width="6" height="8"/>
+            <rect class="window twinkle" x="705" y="125" width="6" height="8"/>
+            <rect class="window" x="685" y="155" width="6" height="8"/>
+            <rect class="window" x="835" y="85" width="6" height="8"/>
+            <rect class="window twinkle" x="850" y="105" width="6" height="8"/>
+            <rect class="window" x="835" y="130" width="6" height="8"/>
+            <rect class="window" x="915" y="140" width="6" height="8"/>
+            <rect class="window twinkle" x="935" y="140" width="6" height="8"/>
+            <rect class="window" x="955" y="165" width="6" height="8"/>
+            <rect class="window twinkle" x="1010" y="65" width="6" height="8"/>
+            <rect class="window" x="1010" y="90" width="6" height="8"/>
+            <rect class="window" x="1075" y="130" width="6" height="8"/>
+            <rect class="window twinkle" x="1095" y="150" width="6" height="8"/>
+            <rect class="window" x="1215" y="90" width="6" height="8"/>
+            <rect class="window twinkle" x="1235" y="110" width="6" height="8"/>
+            <rect class="window" x="1290" y="150" width="6" height="8"/>
+            <rect class="window twinkle" x="1310" y="170" width="6" height="8"/>
+            <rect class="window" x="1380" y="70" width="6" height="8"/>
+            <rect class="window twinkle" x="1380" y="100" width="6" height="8"/>
+        </svg>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <p class="eyebrow">RentHub BD</p>
+            <h1>Create your account</h1>
+            <p class="subtitle">Find a place to rent, or list one you own. Takes about two minutes.</p>
+        </div>
+
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
+        <form th:action="@{/register}" method="post" enctype="multipart/form-data" id="registerForm" novalidate>
+
+            <div class="field-group">
+                <label class="section-label">I am here to</label>
+                <div class="role-select">
+                    <label class="role-card">
+                        <input type="radio" name="userType" value="RENTER" checked>
+                        <span class="role-title">Find a place</span>
+                        <span class="role-desc">I'm looking for a room, apartment or space to rent</span>
+                    </label>
+                    <label class="role-card">
+                        <input type="radio" name="userType" value="OWNER">
+                        <span class="role-title">List my property</span>
+                        <span class="role-desc">I own a space and want to rent it out</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="photo-row">
+                <div class="photo-preview" id="photoPreview">
+                    <span id="photoInitials">+</span>
+                </div>
+                <div>
+                    <label class="upload-btn" for="profilePhoto">Add profile photo</label>
+                    <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*">
+                    <p class="hint">Optional. JPG or PNG, up to 5MB.</p>
+                </div>
+            </div>
+
+            <div class="row-2">
+                <div class="field">
+                    <label for="firstName">First name</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                </div>
+                <div class="field">
+                    <label for="lastName">Last name</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="field">
+                <label for="phoneNumber">Phone number</label>
+                <div class="phone-row">
+                    <select name="countryCode" id="countryCode">
+                        <option value="+880" selected>Bangladesh (+880)</option>
+                        <option value="+91">India (+91)</option>
+                        <option value="+92">Pakistan (+92)</option>
+                        <option value="+94">Sri Lanka (+94)</option>
+                        <option value="+971">UAE (+971)</option>
+                        <option value="+966">Saudi Arabia (+966)</option>
+                        <option value="+65">Singapore (+65)</option>
+                        <option value="+60">Malaysia (+60)</option>
+                        <option value="+44">United Kingdom (+44)</option>
+                        <option value="+1">United States (+1)</option>
+                        <option value="+61">Australia (+61)</option>
+                        <option value="+49">Germany (+49)</option>
+                    </select>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="1XXXXXXXXX" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="dob">Date of birth</label>
+                <input type="date" id="dob" name="dob" required>
+            </div>
+
+            <div class="field">
+                <label for="address">Address</label>
+                <textarea id="address" name="address" rows="3" required></textarea>
+            </div>
+
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                <div class="strength-bar">
+                    <span id="strengthSeg1"></span>
+                    <span id="strengthSeg2"></span>
+                    <span id="strengthSeg3"></span>
+                    <span id="strengthSeg4"></span>
+                </div>
+                <p class="hint" id="strengthLabel">Use 8+ characters with a mix of letters, numbers and symbols</p>
+            </div>
+
+            <div class="field">
+                <label for="confirmPassword">Retype password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                <p class="hint" id="matchLabel"></p>
+            </div>
+
+            <button type="submit" class="submit-btn">Create account</button>
+
+            <p class="login-link">Already have an account? <a th:href="@{/login}">Login</a></p>
+
+        </form>
+    </div>
+</div>
+<script th:src="@{/js/register.js}"></script>
+</body>
+</html>
