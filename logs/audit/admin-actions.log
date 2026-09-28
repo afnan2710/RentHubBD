@@ -49,3 +49,16 @@
 2026-09-16 03:01:09 | superadmin | LOGOUT | session ended
 2026-09-23 06:50:00 | superadmin | LOGIN_SUCCESS | SUPERADMIN
 2026-09-23 06:50:36 | superadmin | LOGOUT | session ended
+2026-09-27 20:03:28 | superadmin | LOGIN_SUCCESS | SUPERADMIN
+2026-09-27 20:04:09 | superadmin | LOGOUT | session ended
+2026-09-27 21:24:07 | shahriar.afnan07@gmail.com | REVIEW_POSTED | Spacious 4-Bedroom House in Uttara :: 5/5
+2026-09-27 21:27:36 | su | LOGIN_FAILED | no such admin
+2026-09-27 21:27:46 | superadmin | LOGIN_SUCCESS | SUPERADMIN
+2026-09-27 21:28:05 | superadmin | USER_DEACTIVATED | afnan.shahriar27@gmail.com
+2026-09-27 21:28:06 | superadmin | USER_DEACTIVATED | shahriar.afnan07@gmail.com
+2026-09-27 21:28:10 | superadmin | ADMIN_STATUS_CHANGED | afnanadmin -> INACTIVE
+2026-09-27 21:28:23 | superadmin | USER_ACTIVATED | afnan.shahriar27@gmail.com
+2026-09-27 21:28:24 | superadmin | USER_ACTIVATED | shahriar.afnan07@gmail.com
+2026-09-27 21:28:27 | superadmin | ADMIN_STATUS_CHANGED | afnanadmin -> ACTIVE
+2026-09-27 21:29:13 | superadmin | LOGOUT | session ended
+2026-09-27 22:15:57 | shahriar.afnan07@gmail.com | VISIT_RESCHEDULED | New request on Spacious 3-Bedroom Apartment in Dhanmondi
